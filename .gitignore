@@ -1,6 +1,8 @@
 # Miscellaneous
 *.class
 *.log
+flutter_log.txt
+full_logcat.txt
 *.pyc
 *.swp
 .DS_Store
@@ -12,6 +14,10 @@
 .swiftpm/
 migrate_working_dir/
 
+# Environment Variables
+.env
+.env.*
+.metadata
 # IntelliJ related
 *.iml
 *.ipr
