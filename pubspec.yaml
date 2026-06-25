@@ -1,0 +1,51 @@
+name: ikiotms_mobile
+description: "iKiotMS Mobile — Employee Shift Management App"
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Icons
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # HTTP client
+  dio: ^5.8.0+1
+
+  # Date formatting
+  intl: ^0.20.2
+  flutter_dotenv: ^6.0.1
+
+  # Secure token storage (encrypted on device)
+  flutter_secure_storage: ^9.2.4
+
+  # Geolocation
+  geolocator: ^13.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Riverpod code generation
+  riverpod_generator: ^2.6.3
+  build_runner: ^2.4.15
+
+  # Linting
+  custom_lint: ^0.7.5
+  riverpod_lint: ^2.6.3
+
+flutter:
+  uses-material-design: true
+
+  # Register the .env file so flutter_dotenv can load it at runtime.
+  # Do NOT commit real secrets to version control.
+  assets:
+    - .env
