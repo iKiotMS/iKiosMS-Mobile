@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/auth/auth_token_provider.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../../data/models/shift_model.dart';
-import '../../../data/repositories/shift_repository.dart';
-import '../../../data/repositories/shift_repository_provider.dart';
+import '../../../data/repositories/shift/shift_repository.dart';
+import '../../../data/repositories/shift/shift_repository_provider.dart';
 
 part 'schedule_view_model.g.dart';
 

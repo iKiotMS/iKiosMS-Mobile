@@ -25,4 +25,14 @@ class ApiEndpoints {
 
   // POST /attendances/check-in
   static const String checkIn = '/attendances/check-in';
+
+  // Profile
+  static const String me = '/auth/me';
+
+  // AI Chat
+  static const String aiChat = '/ai/chat';
+  static const String aiConversations = '/ai/conversations';
+  static String aiConversationDetail(String id) => '/ai/conversations/$id';
+  static String deleteAiConversation(String id) => '/ai/conversations/$id';
+  static String renameAiConversation(String id) => '/ai/conversations/$id';
 }
