@@ -1,4 +1,4 @@
-import '../models/user_model.dart';
+import '../../models/user_model.dart';
 
 abstract class AuthRepository {
   /// Authenticates the user with phone number and password.
@@ -10,4 +10,7 @@ abstract class AuthRepository {
 
   /// Logs out the user by clearing the persisted tokens.
   Future<void> logout();
+
+  /// Gets the currently authenticated user's profile.
+  Future<UserModel> getProfile();
 }

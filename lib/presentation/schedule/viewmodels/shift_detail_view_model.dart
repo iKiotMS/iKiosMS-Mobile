@@ -4,8 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/network/api_exception.dart';
 
 import '../../../data/models/shift_model.dart';
-import '../../../data/repositories/shift_repository.dart';
-import '../../../data/repositories/shift_repository_provider.dart';
+import '../../../data/repositories/shift/shift_repository.dart';
+import '../../../data/repositories/shift/shift_repository_provider.dart';
 
 part 'shift_detail_view_model.g.dart';
 
@@ -77,7 +77,8 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
   /// The view reads [state.isCheckingIn] to disable/enable the button.
   Future<String?> checkIn() async {
     final shift = state.shift;
-    if (shift == null || !shift.isCheckInEligible) return 'Lỗi: Không đủ điều kiện chấm công';
+    if (shift == null || !shift.isCheckInEligible)
+      return 'Lỗi: Không đủ điều kiện chấm công';
 
     state = state.copyWith(isCheckingIn: true, clearError: true);
     try {
@@ -89,10 +90,7 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
       if (e is ApiException) {
         msg = e.message;
       }
-      state = state.copyWith(
-        isCheckingIn: false,
-        errorMessage: msg,
-      );
+      state = state.copyWith(isCheckingIn: false, errorMessage: msg);
       return msg;
     }
   }
@@ -104,7 +102,7 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
     }
     try {
       final shift = await _repository.getShiftById(shiftId);
-      
+
       // Also fetch live GPS coordinates for display
       double? lat;
       double? lon;
@@ -112,7 +110,8 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
         bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
         if (serviceEnabled) {
           LocationPermission permission = await Geolocator.checkPermission();
-          if (permission == LocationPermission.whileInUse || permission == LocationPermission.always) {
+          if (permission == LocationPermission.whileInUse ||
+              permission == LocationPermission.always) {
             Position position = await Geolocator.getCurrentPosition(
               locationSettings: const LocationSettings(
                 accuracy: LocationAccuracy.high,
@@ -127,7 +126,7 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
       }
 
       state = state.copyWith(
-        shift: shift, 
+        shift: shift,
         isLoading: false,
         currentLatitude: lat,
         currentLongitude: lon,
