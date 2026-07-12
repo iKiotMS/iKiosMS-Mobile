@@ -52,8 +52,8 @@ jobs:
 
       - name: Build APK and AAB
         run: |
-          flutter build apk --release
-          flutter build appbundle --release
+          flutter build apk --release --stacktrace --info
+          flutter build appbundle --release --stacktrace --info 
 
       - name: Create or update GitHub Release
         env:
