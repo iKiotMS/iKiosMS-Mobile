@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../core/auth/auth_token_provider.dart';
-import '../services/auth_api_service.dart';
+import '../../../core/auth/auth_token_provider.dart';
+import '../../services/auth_api_service.dart';
 import 'auth_repository.dart';
 import 'auth_repository_impl.dart';
 

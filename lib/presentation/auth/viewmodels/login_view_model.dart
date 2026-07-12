@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../data/repositories/auth_repository.dart';
-import '../../../data/repositories/auth_repository_provider.dart';
+import '../../../data/repositories/auth/auth_repository.dart';
+import '../../../data/repositories/auth/auth_repository_provider.dart';
 
 part 'login_view_model.g.dart';
 

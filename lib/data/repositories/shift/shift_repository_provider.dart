@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../services/shift_api_service.dart';
+import '../../services/shift_api_service.dart';
 import 'shift_repository.dart';
 import 'shift_repository_impl.dart';
 

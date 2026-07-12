@@ -29,6 +29,19 @@ class UserModel {
     );
   }
 
+  factory UserModel.fromProfileJson(Map<String, dynamic> json) {
+    final profile = json['profile'] as Map<String, dynamic>?;
+    return UserModel(
+      id: json['id']?.toString() ?? '',
+      phoneNumber: json['phoneNumber']?.toString() ?? '',
+      role: json['role']?.toString() ?? '',
+      tenantId: json['tenantId']?.toString(),
+      firstName: profile?['firstName']?.toString() ?? '',
+      lastName: profile?['lastName']?.toString() ?? '',
+      status: json['status']?.toString() ?? '',
+    );
+  }
+
   String get fullName {
     final names = [firstName, lastName].where((n) => n.isNotEmpty).toList();
     if (names.isEmpty) return 'Nhân viên';

@@ -29,4 +29,11 @@ class AuthApiService {
     );
     return response.data;
   }
+
+  /// Fetches profile of the currently logged-in user.
+  /// Returns raw JSON map representing UserProfileResponseDTO from backend.
+  Future<Map<String, dynamic>> getProfile() async {
+    final response = await _dio.get(ApiEndpoints.me);
+    return response.data;
+  }
 }

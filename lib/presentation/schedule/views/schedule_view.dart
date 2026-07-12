@@ -22,6 +22,16 @@ class ScheduleView extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: Navigator.of(context).canPop()
+          ? AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_rounded),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            )
+          : null,
       body: SafeArea(
         child: RefreshIndicator(
           // Pull-to-refresh reloads shifts for the currently selected week.
@@ -32,7 +42,7 @@ class ScheduleView extends ConsumerWidget {
               // ── Header ──────────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                  padding: EdgeInsets.fromLTRB(16, Navigator.of(context).canPop() ? 8 : 20, 16, 0),
                   child: _GreetingHeader(now: now),
                 ),
               ),

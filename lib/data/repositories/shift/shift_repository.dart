@@ -1,4 +1,4 @@
-import '../../data/models/shift_model.dart';
+import '../../models/shift_model.dart';
 
 /// Abstract interface for the shift repository.
 ///

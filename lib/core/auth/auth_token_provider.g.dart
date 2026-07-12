@@ -6,7 +6,7 @@ part of 'auth_token_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authTokenHash() => r'594a7ca2e28fec959d9e1c5eff961259f2d0d263';
+String _$authTokenHash() => r'218b6f2a7e5d9c008b5d024516cb3eb5d3f372c6';
 
 /// Manages the authentication state across the app.
 ///
