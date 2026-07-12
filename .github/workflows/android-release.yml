@@ -46,14 +46,18 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Create .env file
+        run: |
+          echo "BACKEND_URL=${{ secrets.BACKEND_URL || 'https://ikiotms-be-dev.onrender.com/' }}" > .env
+
       - name: Decode Android keystore
         run: |
           printf "%s" "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_PATH"
 
       - name: Build APK and AAB
         run: |
-          flutter build apk --release --stacktrace --info
-          flutter build appbundle --release --stacktrace --info 
+          flutter build apk --release --verbose
+          flutter build appbundle --release --verbose
 
       - name: Create or update GitHub Release
         env:
