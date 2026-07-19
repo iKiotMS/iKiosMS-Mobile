@@ -36,6 +36,16 @@ class ApiEndpoints {
   // POST /attendances/check-in
   static const String checkIn = '/attendances/check-in';
 
+  // Sổ thu chi (cashflow) — Owner/Manager only (backend requires reports:read).
+  // Query params (fromDate/toDate as yyyy-MM-dd, flowType, paymentMethod, page,
+  // limit) are passed via Dio queryParameters, not baked into the path.
+  static const String cashflowSummary = '/stats/cashflow';
+  static const String cashflowTransactions = '/stats/cashflow/transactions';
+
+  // Branch list — powers the cashflow branch picker (TENANT_OWNER filters by
+  // branch). Query params (limit, status) passed via Dio queryParameters.
+  static const String branches = '/branches';
+
   // Profile
   static const String me = '/auth/me';
 

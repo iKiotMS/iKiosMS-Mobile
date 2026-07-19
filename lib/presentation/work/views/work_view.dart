@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/viewmodels/user_profile_provider.dart';
 import '../../location_settings/views/location_settings_view.dart';
 import '../../promotion/views/promotion_list_view.dart';
+import '../../cashflow/views/cash_flow_view.dart';
 import '../../schedule/views/schedule_view.dart';
 import '../../stock_adjustment/views/adjustment_list_view.dart';
 import '../../stock_movement_history/views/stock_movement_history_view.dart';
@@ -129,7 +130,7 @@ class WorkView extends ConsumerWidget {
     final soThuChiItem = WorkItem(
       title: 'Sổ thu chi',
       icon: Icons.account_balance_wallet_outlined,
-      builder: () => const FeaturePlaceholderView(title: 'Sổ thu chi'),
+      builder: () => const CashFlowView(),
     );
 
     final nhanVienItem = WorkItem(

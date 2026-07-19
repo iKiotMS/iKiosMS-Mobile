@@ -1,40 +1,32 @@
-import 'package:intl/intl.dart';
-
-/// Formatting helpers for the dashboard, mirroring the web app's
-/// `src/app/(protected)/dashboard/shared/format.ts`.
+/// Helpers for formatting Vietnamese đồng (VND) amounts.
+///
+/// The backend stores money as plain integers of VND (no decimals), matching
+/// the dashboard. We group thousands with a dot — "1.500.000 ₫" — which is the
+/// Vietnamese convention.
 class CurrencyUtils {
   CurrencyUtils._(); // prevent instantiation
 
-  /// e.g. 1234567 -> "1.234.567 ₫"
-  static String formatVND(num value) {
-    return NumberFormat.currency(
-      locale: 'vi_VN',
-      symbol: '₫',
-      decimalDigits: 0,
-    ).format(value);
+  /// Formats a VND amount with dot thousands separators, e.g. 1500000 → "1.500.000 ₫".
+  static String formatVnd(num amount) {
+    return '${_groupThousands(amount.round())} ₫';
   }
 
-  /// e.g. 1234567 -> "1,2Tr ₫" (compact notation, max 1 fraction digit)
-  static String formatCompactVND(num value) {
-    return NumberFormat.compactCurrency(
-      locale: 'vi_VN',
-      symbol: '₫',
-      decimalDigits: 1,
-    ).format(value);
+  /// Formats a signed VND amount, prefixing "+" for income and "-" for expense,
+  /// e.g. income 50000 → "+50.000 ₫", expense 20000 → "-20.000 ₫".
+  static String formatSignedVnd(num amount, {required bool isIncome}) {
+    final sign = isIncome ? '+' : '-';
+    return '$sign${formatVnd(amount.abs())}';
   }
 
-  /// e.g. 1234567 -> "1.234.567"
-  static String formatNumber(num value) {
-    return NumberFormat.decimalPattern('vi_VN').format(value);
-  }
-
-  /// e.g. 12.3 -> "+12.3%", -5 -> "-5%", null -> "—"
-  static String formatPercent(num? value) {
-    if (value == null) return '—';
-    final sign = value > 0 ? '+' : '';
-    final display = value == value.roundToDouble()
-        ? value.round().toString()
-        : value.toStringAsFixed(1);
-    return '$sign$display%';
+  /// Groups an integer's digits into dot-separated thousands.
+  static String _groupThousands(int value) {
+    final isNegative = value < 0;
+    final digits = value.abs().toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < digits.length; i++) {
+      if (i > 0 && (digits.length - i) % 3 == 0) buffer.write('.');
+      buffer.write(digits[i]);
+    }
+    return isNegative ? '-$buffer' : buffer.toString();
   }
 }
