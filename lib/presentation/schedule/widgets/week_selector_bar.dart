@@ -19,7 +19,8 @@ class WeekSelectorBar extends ConsumerWidget {
 
     // Check if today falls in the selected week to show a small indicator.
     final today = DateTime.now();
-    final todayInWeek = !today.isBefore(weekStart) &&
+    final todayInWeek =
+        !today.isBefore(weekStart) &&
         !today.isAfter(weekEnd.add(const Duration(hours: 23, minutes: 59)));
 
     return PressableScale(
@@ -51,16 +52,16 @@ class WeekSelectorBar extends ConsumerWidget {
                     Text(
                       label,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     if (todayInWeek) ...[
                       const SizedBox(height: 2),
                       Text(
                         'Tuần hiện tại',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ],
                   ],

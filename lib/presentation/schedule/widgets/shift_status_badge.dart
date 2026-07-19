@@ -10,11 +10,7 @@ import '../../../data/models/shift_model.dart';
 ///   completed → grey
 ///   missed → red
 class ShiftStatusBadge extends StatelessWidget {
-  const ShiftStatusBadge({
-    super.key,
-    required this.shift,
-    this.small = false,
-  });
+  const ShiftStatusBadge({super.key, required this.shift, this.small = false});
 
   final ShiftModel shift;
 
@@ -44,10 +40,7 @@ class ShiftStatusBadge extends StatelessWidget {
           Container(
             width: small ? 6 : 7,
             height: small ? 6 : 7,
-            decoration: BoxDecoration(
-              color: textColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: textColor, shape: BoxShape.circle),
           ),
           const SizedBox(width: 5),
           Text(
@@ -96,7 +89,9 @@ class AttendanceStatusBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            shift.checkedInAt != null ? Icons.verified_rounded : Icons.pending_actions_rounded,
+            shift.checkedInAt != null
+                ? Icons.verified_rounded
+                : Icons.pending_actions_rounded,
             size: small ? 11 : 13,
             color: textColor,
           ),

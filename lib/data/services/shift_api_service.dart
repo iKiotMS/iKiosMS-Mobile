@@ -27,13 +27,10 @@ class ShiftApiService {
   ///
   /// Returns a list of raw JSON maps.
   Future<List<Map<String, dynamic>>> getShifts({
-    required String userId,
     required String startDate,
     required String endDate,
   }) async {
-    final response = await _dio.get(
-      ApiEndpoints.shifts(userId, startDate, endDate),
-    );
+    final response = await _dio.get(ApiEndpoints.myShifts(startDate, endDate));
     // Expect the backend to return a JSON array.
     final data = response.data;
     if (data is List) {
@@ -51,32 +48,6 @@ class ShiftApiService {
   /// Returns a single raw JSON map.
   Future<Map<String, dynamic>> getShiftById(String shiftId) async {
     final response = await _dio.get(ApiEndpoints.shiftDetail(shiftId));
-    final data = response.data;
-    if (data is Map<String, dynamic>) return data;
-    if (data is Map && data['data'] is Map) {
-      return (data['data'] as Map).cast<String, dynamic>();
-    }
-    return {};
-  }
-
-  /// POST /attendances/check-in
-  ///
-  /// Returns the updated shift as a raw JSON map.
-  Future<Map<String, dynamic>> checkIn({
-    required String scheduleId,
-    required double latitude,
-    required double longitude,
-    required double accuracy,
-  }) async {
-    final response = await _dio.post(
-      ApiEndpoints.checkIn,
-      data: {
-        'scheduleId': scheduleId,
-        'latitude': latitude,
-        'longitude': longitude,
-        'accuracy': accuracy,
-      },
-    );
     final data = response.data;
     if (data is Map<String, dynamic>) return data;
     if (data is Map && data['data'] is Map) {

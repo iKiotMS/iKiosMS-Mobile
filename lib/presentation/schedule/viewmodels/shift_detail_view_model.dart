@@ -1,8 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/network/api_exception.dart';
-
 import '../../../data/models/shift_model.dart';
 import '../../../data/repositories/shift/shift_repository.dart';
 import '../../../data/repositories/shift/shift_repository_provider.dart';
@@ -15,7 +13,6 @@ part 'shift_detail_view_model.g.dart';
 class ShiftDetailState {
   final ShiftModel? shift;
   final bool isLoading;
-  final bool isCheckingIn;
   final String? errorMessage;
   final double? currentLatitude;
   final double? currentLongitude;
@@ -23,7 +20,6 @@ class ShiftDetailState {
   const ShiftDetailState({
     this.shift,
     this.isLoading = false,
-    this.isCheckingIn = false,
     this.errorMessage,
     this.currentLatitude,
     this.currentLongitude,
@@ -32,7 +28,6 @@ class ShiftDetailState {
   ShiftDetailState copyWith({
     ShiftModel? shift,
     bool? isLoading,
-    bool? isCheckingIn,
     String? errorMessage,
     double? currentLatitude,
     double? currentLongitude,
@@ -41,7 +36,6 @@ class ShiftDetailState {
     return ShiftDetailState(
       shift: shift ?? this.shift,
       isLoading: isLoading ?? this.isLoading,
-      isCheckingIn: isCheckingIn ?? this.isCheckingIn,
       currentLatitude: currentLatitude ?? this.currentLatitude,
       currentLongitude: currentLongitude ?? this.currentLongitude,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
@@ -69,31 +63,6 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
   /// Reloads shift data from the backend.
   Future<void> loadShift(String shiftId) async {
     await _loadShift(shiftId);
-  }
-
-  /// Performs the check-in action for this shift.
-  ///
-  /// Shows a loading indicator on the button while the request is in-flight.
-  /// The view reads [state.isCheckingIn] to disable/enable the button.
-  Future<String?> checkIn() async {
-    final shift = state.shift;
-    if (shift == null || !shift.isCheckInEligible) {
-      return 'Lỗi: Không đủ điều kiện chấm công';
-    }
-
-    state = state.copyWith(isCheckingIn: true, clearError: true);
-    try {
-      final updatedShift = await _repository.checkIn(shift.id);
-      state = state.copyWith(shift: updatedShift, isCheckingIn: false);
-      return null; // signal success to the view
-    } catch (e) {
-      String msg = 'Chấm công thất bại. Vui lòng thử lại.';
-      if (e is ApiException) {
-        msg = e.message;
-      }
-      state = state.copyWith(isCheckingIn: false, errorMessage: msg);
-      return msg;
-    }
   }
 
   Future<void> _loadShift(String shiftId) async {

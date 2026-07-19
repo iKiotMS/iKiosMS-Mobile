@@ -23,8 +23,8 @@ class ScheduleEmptyState extends StatelessWidget {
               'Chưa có ca làm trong tuần này',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
+                color: colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
