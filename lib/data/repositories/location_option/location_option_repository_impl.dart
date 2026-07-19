@@ -36,4 +36,12 @@ class LocationOptionRepositoryImpl implements LocationOptionRepository {
       return [...branches, ...warehouses];
     });
   }
+
+  @override
+  Future<List<LocationOption>> getBranchOptions() {
+    return _run(() async {
+      final raw = await _apiService.getBranches();
+      return raw.map((e) => LocationOption.fromJson(e, 'branch')).toList();
+    });
+  }
 }

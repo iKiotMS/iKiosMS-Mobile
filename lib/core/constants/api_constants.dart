@@ -75,4 +75,14 @@ class ApiEndpoints {
   // TENANT_OWNER, who has no single owned branch/warehouse)
   static const String branches = '/branches';
   static const String warehouses = '/warehouses';
+
+  // Promotions — list/detail/usage-log history, plus create/update/deactivate
+  // for TENANT_OWNER/BRANCH_MANAGER (see promotion_permissions.dart).
+  static const String promotions = '/promotions';
+  static String promotionDetail(String id) => '/promotions/$id';
+  static String promotionLogs(String id) => '/promotions/$id/logs';
+
+  // Picker option lists for the promotion create/edit form.
+  static const String categories = '/categories';
+  static const String productItems = '/products/items';
 }
