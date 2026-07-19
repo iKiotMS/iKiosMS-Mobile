@@ -75,7 +75,7 @@ class _RevenueBreakdownState extends ConsumerState<RevenueBreakdown> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.4)),
+        side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -158,7 +158,7 @@ class _RevenueBreakdownState extends ConsumerState<RevenueBreakdown> {
                     margin: const EdgeInsets.only(bottom: 4),
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isActive ? theme.colorScheme.surfaceContainerHighest.withOpacity(0.6) : null,
+                      color: isActive ? theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6) : null,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(

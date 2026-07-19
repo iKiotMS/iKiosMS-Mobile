@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../stock_movement_history/shared/movement_labels.dart' show locationTypeLabels;
+import '../shared/movement_labels.dart' show locationTypeLabels;
 import '../viewmodels/adjustment_create_view_model.dart';
 import '../widgets/product_picker_sheet.dart';
 
@@ -131,7 +131,7 @@ class _LocationSection extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+          border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -195,7 +195,7 @@ class _DraftLineCard extends StatelessWidget {
       margin: const EdgeInsets.only(top: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(

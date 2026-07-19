@@ -50,7 +50,7 @@ class LocationSettingsApiService {
         data: {
           'name': name,
           if (phoneNumber != null) 'phoneNumber': [phoneNumber],
-          if (address != null) 'address': address,
+          'address': ?address,
         },
       ),
     );
@@ -70,7 +70,7 @@ class LocationSettingsApiService {
         ApiEndpoints.warehouseDetail(id),
         data: {
           'name': name,
-          if (address != null) 'address': address,
+          'address': ?address,
         },
       ),
     );

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Vietnamese labels + colors for movement status/type, mirroring the web
-/// app's `exchange/shared/movement-labels.ts` (`MOVEMENT_STATUS_MAP`,
-/// `MOVEMENT_TYPE_MAP`).
+/// Vietnamese labels + colors for movement status/type.
 class MovementStatusConfig {
   final String label;
   final Color color;
@@ -48,9 +46,6 @@ const Map<String, String> locationTypeLabels = {
   'warehouse': 'Kho',
 };
 
-/// Status filter options shown for the history screen — the union of
-/// statuses IMPORT/EXPORT/RETURN movements actually use (excludes ADJUST's
-/// own vocabulary, since ADJUST is out of scope here).
 const List<String> movementStatusFilterOptions = [
   'DRAFT',
   'OPENING',

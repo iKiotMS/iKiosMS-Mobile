@@ -50,7 +50,7 @@ class SalesChart extends ConsumerWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.4)),
+        side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -117,7 +117,7 @@ class SalesChart extends ConsumerWidget {
                       drawVerticalLine: false,
                       horizontalInterval: maxY / 4,
                       getDrawingHorizontalLine: (_) => FlLine(
-                        color: theme.colorScheme.outlineVariant.withOpacity(0.3),
+                        color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
                         strokeWidth: 1,
                       ),
                     ),
@@ -172,8 +172,8 @@ class SalesChart extends ConsumerWidget {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              theme.colorScheme.primary.withOpacity(0.35),
-                              theme.colorScheme.primary.withOpacity(0.02),
+                              theme.colorScheme.primary.withValues(alpha: 0.35),
+                              theme.colorScheme.primary.withValues(alpha: 0.02),
                             ],
                           ),
                         ),

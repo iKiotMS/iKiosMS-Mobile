@@ -9,7 +9,6 @@ import '../../promotion/views/promotion_list_view.dart';
 import '../../cashflow/views/cash_flow_view.dart';
 import '../../schedule/views/schedule_view.dart';
 import '../../stock_adjustment/views/adjustment_list_view.dart';
-import '../../stock_movement_history/views/stock_movement_history_view.dart';
 import '../../transfers/views/transfers_list_view.dart';
 import 'feature_placeholder_view.dart';
 
@@ -211,10 +210,6 @@ class WorkView extends ConsumerWidget {
           builder: () => const TransfersListView(),
         ),
         WorkSubItem(
-          title: 'Lịch sử nhập/xuất kho',
-          builder: () => const StockMovementHistoryView(),
-        ),
-        WorkSubItem(
           title: 'Điều chỉnh tồn kho',
           builder: () => const AdjustmentListView(),
         ),
@@ -232,10 +227,6 @@ class WorkView extends ConsumerWidget {
         WorkSubItem(
           title: 'Chuyển hàng',
           builder: () => const TransfersListView(),
-        ),
-        WorkSubItem(
-          title: 'Lịch sử nhập/xuất kho',
-          builder: () => const StockMovementHistoryView(),
         ),
         WorkSubItem(
           title: 'Điều chỉnh tồn kho',

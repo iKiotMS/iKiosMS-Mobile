@@ -83,7 +83,6 @@ class ApiEndpoints {
 
   // Branch / warehouse lists (used to build the ADJUST location picker for
   // TENANT_OWNER, who has no single owned branch/warehouse)
-  static const String branches = '/branches';
   static const String warehouses = '/warehouses';
 
   // Promotions — list/detail/usage-log history, plus create/update/deactivate
@@ -95,4 +94,10 @@ class ApiEndpoints {
   // Picker option lists for the promotion create/edit form.
   static const String categories = '/categories';
   static const String productItems = '/products/items';
+
+  // Support Tickets
+  static const String myTickets = '/tickets/my';
+  static const String tickets = '/tickets';
+  static String ticketDetail(String id) => '/tickets/$id';
+  static String replyTicket(String id) => '/tickets/$id/my-reply';
 }

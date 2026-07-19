@@ -44,7 +44,7 @@ class StockMovementApiService {
         'movementType': movementType,
         'page': page,
         'limit': limit,
-        if (status != null) 'status': status,
+        'status': ?status,
       },
     );
     final data = response.data;

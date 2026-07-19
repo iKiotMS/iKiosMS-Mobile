@@ -41,7 +41,7 @@ class _CashflowInventoryCardState extends ConsumerState<CashflowInventoryCard> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.4)),
+        side: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -190,7 +190,7 @@ class _InventoryTab extends StatelessWidget {
         else
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+              border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
@@ -200,7 +200,7 @@ class _InventoryTab extends StatelessWidget {
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
-                    border: isLast ? null : Border(bottom: BorderSide(color: theme.colorScheme.outlineVariant.withOpacity(0.4))),
+                    border: isLast ? null : Border(bottom: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4))),
                   ),
                   child: Row(
                     children: [
@@ -265,7 +265,7 @@ class _StatTile extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -303,7 +303,7 @@ class _MiniStat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(

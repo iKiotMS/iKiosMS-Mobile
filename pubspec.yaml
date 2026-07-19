@@ -26,6 +26,9 @@ dependencies:
   # Markdown rendering for AI chat
   flutter_markdown: ^0.7.3
 
+  # WebSockets for realtime updates (support tickets)
+  socket_io_client: ^3.0.2
+
   # Secure token storage (encrypted on device)
   flutter_secure_storage: ^9.2.4
 

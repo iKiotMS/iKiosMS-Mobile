@@ -5,6 +5,7 @@ import '../../../core/auth/auth_token_provider.dart';
 import '../../../core/push/push_service.dart';
 import '../../../data/models/user_model.dart';
 import '../../auth/viewmodels/user_profile_provider.dart';
+import '../../tickets/views/tickets_list_view.dart';
 import '../viewmodels/profile_view_model.dart';
 
 /// The "Cá nhân" (Profile) tab. Shows the signed-in user's details, lets them
@@ -193,6 +194,23 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                   ),
                   value: _pushEnabled,
                   onChanged: _pushBusy ? null : _togglePush,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Support & Tickets
+              Text('Hỗ trợ & Phản ánh',
+                  style: theme.textTheme.titleSmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              const SizedBox(height: 8),
+              Card(
+                margin: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.support_agent_rounded),
+                  title: const Text('Gửi phản ánh & Hỗ trợ'),
+                  subtitle: const Text('Tạo ticket hỗ trợ kỹ thuật hoặc góp ý hệ thống'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => TicketsListView.navigate(context),
                 ),
               ),
               const SizedBox(height: 32),

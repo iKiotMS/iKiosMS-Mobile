@@ -36,7 +36,7 @@ class PromotionApiService {
         'page': page,
         'recordPerPage': limit,
         if (search != null && search.isNotEmpty) 'search': search,
-        if (status != null) 'status': status,
+        'status': ?status,
       },
     );
     final data = response.data;

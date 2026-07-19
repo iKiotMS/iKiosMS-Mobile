@@ -143,7 +143,7 @@ class _DetailBody extends ConsumerWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+            border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -181,7 +181,7 @@ class _DetailBody extends ConsumerWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.4),
+              color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -238,7 +238,7 @@ class _LogTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(color: theme.colorScheme.outlineVariant.withOpacity(0.5)),
+        border: Border.all(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5)),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -304,7 +304,7 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(label, style: TextStyle(fontWeight: FontWeight.w600, color: color, fontSize: 12)),

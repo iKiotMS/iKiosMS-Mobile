@@ -97,7 +97,7 @@ class StatsApiService {
       queryParameters: {
         'fromDate': fromDate,
         'toDate': toDate,
-        if (flow != null) 'flow': flow,
+        'flow': ?flow,
       },
     );
   }

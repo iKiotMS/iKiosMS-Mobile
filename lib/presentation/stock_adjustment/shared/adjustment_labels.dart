@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../stock_movement_history/shared/movement_labels.dart';
+import 'movement_labels.dart';
 
 /// ADJUST-specific status vocabulary. The shared `movementStatusMap` in
-/// `stock_movement_history/shared/movement_labels.dart` labels `PENDING` as
+/// `stock_adjustment/shared/movement_labels.dart` labels `PENDING` as
 /// "Chờ giao hàng" (a delivery-flow phrase for IMPORT/EXPORT) — inaccurate
 /// for an adjustment, which is awaiting approval, not delivery. `ADJUST`
 /// only ever uses PENDING/COMPLETED/CANCELLED (see `StockMovementRequest`
