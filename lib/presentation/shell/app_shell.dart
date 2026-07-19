@@ -5,6 +5,8 @@ import '../ai_chat/views/ai_chat_view.dart';
 import '../auth/viewmodels/user_profile_provider.dart';
 import '../../core/auth/auth_token_provider.dart';
 import '../../core/push/push_service.dart';
+import '../notifications/viewmodels/notifications_view_model.dart';
+import '../notifications/views/notifications_view.dart';
 import '../profile/views/profile_view.dart';
 import '../work/views/work_view.dart';
 import 'tab_placeholders.dart';
@@ -37,6 +39,8 @@ class _AppShellState extends ConsumerState<AppShell> {
   @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(userProfileProvider);
+    final unreadCount =
+        ref.watch(notificationsViewModelProvider).valueOrNull?.unreadCount ?? 0;
     final theme = Theme.of(context);
 
     return profileState.when(
@@ -67,9 +71,17 @@ class _AppShellState extends ConsumerState<AppShell> {
             selectedIcon: Icon(Icons.work_rounded),
             label: 'Công việc',
           ),
-          const NavigationDestination(
-            icon: Icon(Icons.notifications_outlined),
-            selectedIcon: Icon(Icons.notifications_rounded),
+          NavigationDestination(
+            icon: Badge(
+              isLabelVisible: unreadCount > 0,
+              label: Text('$unreadCount'),
+              child: const Icon(Icons.notifications_outlined),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: unreadCount > 0,
+              label: Text('$unreadCount'),
+              child: const Icon(Icons.notifications_rounded),
+            ),
             label: 'Thông báo',
           ),
           if (isTenant)
