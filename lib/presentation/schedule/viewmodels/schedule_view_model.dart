@@ -1,6 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/auth/auth_token_provider.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../../data/models/shift_model.dart';
 import '../../../data/repositories/shift/shift_repository.dart';
@@ -122,12 +121,7 @@ class ScheduleViewModel extends _$ScheduleViewModel {
       state = state.copyWith(isLoading: true, clearError: true);
     }
     try {
-      // Retrieve the user ID directly from the auth token provider
-      final userId = await ref.read(authTokenProvider.notifier).getUserId();
-      if (userId == null) throw Exception('User not found');
-
       final shifts = await _repository.getShifts(
-        userId: userId,
         startDate: start,
         endDate: end,
       );

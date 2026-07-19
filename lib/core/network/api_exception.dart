@@ -23,7 +23,8 @@ class ApiException implements Exception {
     }
 
     return ApiException(
-      message: fromBody ??
+      message:
+          fromBody ??
           (fallback != null && fallback.isNotEmpty
               ? fallback
               : 'Lỗi kết nối máy chủ'),
@@ -55,4 +56,19 @@ class ApiException implements Exception {
     }
     return 'ApiException: $message';
   }
+}
+
+/// Returns a short message that can be shown directly in the UI.
+String readableApiError(Object error) {
+  if (error is ApiException) return error.message;
+
+  final apiError = ApiException.fromDio(error);
+  if (apiError.message != 'Lỗi kết nối máy chủ') {
+    return apiError.message;
+  }
+
+  final message = error.toString();
+  return message.startsWith('Exception: ')
+      ? message.substring('Exception: '.length)
+      : message;
 }

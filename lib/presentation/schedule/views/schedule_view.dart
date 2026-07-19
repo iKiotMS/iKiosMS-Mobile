@@ -42,7 +42,12 @@ class ScheduleView extends ConsumerWidget {
               // ── Header ──────────────────────────────────────────────────
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(16, Navigator.of(context).canPop() ? 8 : 20, 16, 0),
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    Navigator.of(context).canPop() ? 8 : 20,
+                    16,
+                    0,
+                  ),
                   child: _GreetingHeader(now: now),
                 ),
               ),
@@ -57,9 +62,7 @@ class ScheduleView extends ConsumerWidget {
 
               // ── Current / Next Shift Summary ─────────────────────────────
               if (!state.isLoading && state.errorMessage == null)
-                SliverToBoxAdapter(
-                  child: _ShiftSummarySection(state: state),
-                ),
+                SliverToBoxAdapter(child: _ShiftSummarySection(state: state)),
 
               // ── Loading ──────────────────────────────────────────────────
               if (state.isLoading)
@@ -114,9 +117,7 @@ class ScheduleView extends ConsumerWidget {
               if (!state.isLoading &&
                   state.errorMessage == null &&
                   state.shifts.isEmpty)
-                const SliverFillRemaining(
-                  child: ScheduleEmptyState(),
-                ),
+                const SliverFillRemaining(child: ScheduleEmptyState()),
 
               // ── Shift list ───────────────────────────────────────────────
               if (!state.isLoading &&
@@ -127,27 +128,21 @@ class ScheduleView extends ConsumerWidget {
                     padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
                     child: Text(
                       'Ca làm trong tuần',
-                      style:
-                          Theme.of(context).textTheme.titleSmall?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                                fontWeight: FontWeight.w600,
-                              ),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
                 SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final shift = state.shifts[index];
-                      return ShiftCard(
-                        shift: shift,
-                        onTap: () => _openDetail(context, shift),
-                      );
-                    },
-                    childCount: state.shifts.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final shift = state.shifts[index];
+                    return ShiftCard(
+                      shift: shift,
+                      onTap: () => _openDetail(context, shift),
+                    );
+                  }, childCount: state.shifts.length),
                 ),
                 // Bottom padding so last card isn't hidden by nav bar
                 const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -161,9 +156,7 @@ class ScheduleView extends ConsumerWidget {
 
   void _openDetail(BuildContext context, ShiftModel shift) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ShiftDetailView(shiftId: shift.id),
-      ),
+      MaterialPageRoute(builder: (_) => ShiftDetailView(shiftId: shift.id)),
     );
   }
 }
@@ -187,16 +180,16 @@ class _GreetingHeader extends StatelessWidget {
       children: [
         Text(
           'Xin chào! 👋',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 4),
         Text(
           '$weekday, $d/$m/${now.year}',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -231,10 +224,7 @@ class _ShiftSummarySection extends StatelessWidget {
           if (current != null && next != null) const SizedBox(width: 10),
           if (next != null)
             Expanded(
-              child: _SummaryCard(
-                label: 'Ca tiếp theo',
-                shift: next,
-              ),
+              child: _SummaryCard(label: 'Ca tiếp theo', shift: next),
             ),
         ],
       ),
@@ -272,38 +262,38 @@ class _SummaryCard extends StatelessWidget {
             Text(
               label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: highlight
-                        ? colorScheme.onPrimaryContainer
-                        : colorScheme.onSurfaceVariant,
-                  ),
+                color: highlight
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
               DateTimeUtils.formatTimeRange(shift.startTime, shift.endTime),
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: highlight
-                        ? colorScheme.onPrimaryContainer
-                        : colorScheme.onSurface,
-                  ),
+                fontWeight: FontWeight.w700,
+                color: highlight
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 2),
             Text(
               DateTimeUtils.formatShortDate(shift.date),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: highlight
-                        ? colorScheme.onPrimaryContainer.withValues(alpha: 0.7)
-                        : colorScheme.onSurfaceVariant,
-                  ),
+                color: highlight
+                    ? colorScheme.onPrimaryContainer.withValues(alpha: 0.7)
+                    : colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               shift.role,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: highlight
-                        ? colorScheme.onPrimaryContainer.withValues(alpha: 0.8)
-                        : colorScheme.onSurfaceVariant,
-                  ),
+                color: highlight
+                    ? colorScheme.onPrimaryContainer.withValues(alpha: 0.8)
+                    : colorScheme.onSurfaceVariant,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

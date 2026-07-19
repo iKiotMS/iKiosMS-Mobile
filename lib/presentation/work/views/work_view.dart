@@ -3,13 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../attendance/attendance_view.dart';
 import '../../auth/viewmodels/user_profile_provider.dart';
+import '../../leave/leave_view.dart';
+import '../../payroll/payroll_view.dart';
 import '../../cashflow/views/cash_flow_view.dart';
 import '../../leave_approval/views/leave_approval_view.dart';
 import '../../location_settings/views/location_settings_view.dart';
 import '../../promotion/views/promotion_list_view.dart';
 import '../../schedule/views/schedule_view.dart';
-import '../../shift_management/views/shift_management_view.dart';
 import '../../staff/views/staff_list_view.dart';
 import '../../stock_adjustment/views/adjustment_list_view.dart';
 import '../../transfers/views/transfers_list_view.dart';
@@ -24,14 +26,13 @@ class WorkView extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Công việc'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Công việc'), centerTitle: true),
       body: profileState.when(
         data: (profile) {
           if (profile == null) {
-            return const Center(child: Text('Không tìm thấy thông tin nhân viên.'));
+            return const Center(
+              child: Text('Không tìm thấy thông tin nhân viên.'),
+            );
           }
 
           final role = profile.role;
@@ -65,18 +66,30 @@ class WorkView extends ConsumerWidget {
                     children: group.items.map((item) {
                       if (item.subItems != null && item.subItems!.isNotEmpty) {
                         return ExpansionTile(
-                          tilePadding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          leading: Icon(item.icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                          tilePadding: const EdgeInsets.symmetric(
+                            horizontal: 24.0,
+                          ),
+                          leading: Icon(
+                            item.icon,
+                            size: 20,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                           title: Text(item.title),
                           shape: const Border(),
                           children: item.subItems!.map((subItem) {
                             return ListTile(
-                              contentPadding: const EdgeInsets.only(left: 48.0, right: 24.0),
+                              contentPadding: const EdgeInsets.only(
+                                left: 48.0,
+                                right: 24.0,
+                              ),
                               title: Text(
                                 subItem.title,
                                 style: theme.textTheme.bodyMedium,
                               ),
-                              trailing: const Icon(Icons.chevron_right_rounded, size: 18),
+                              trailing: const Icon(
+                                Icons.chevron_right_rounded,
+                                size: 18,
+                              ),
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -90,10 +103,19 @@ class WorkView extends ConsumerWidget {
                       }
 
                       return ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        leading: Icon(item.icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 24.0,
+                        ),
+                        leading: Icon(
+                          item.icon,
+                          size: 20,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                         title: Text(item.title),
-                        trailing: const Icon(Icons.chevron_right_rounded, size: 18),
+                        trailing: const Icon(
+                          Icons.chevron_right_rounded,
+                          size: 18,
+                        ),
                         onTap: () {
                           if (item.builder != null) {
                             Navigator.of(context).push(
@@ -112,9 +134,8 @@ class WorkView extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(
-          child: Text('Lỗi tải danh mục công việc: $err'),
-        ),
+        error: (err, stack) =>
+            Center(child: Text('Lỗi tải danh mục công việc: $err')),
       ),
     );
   }
@@ -140,29 +161,11 @@ class WorkView extends ConsumerWidget {
       title: 'Nhân viên',
       icon: Icons.people_outline_rounded,
       subItems: [
-        WorkSubItem(
-          title: 'Danh sách',
-          builder: () => const StaffListView(),
-        ),
-        WorkSubItem(
-          title: 'Lịch làm',
-          builder: () => const ScheduleView(),
-        ),
-        WorkSubItem(
-          title: 'Ca làm',
-          builder: () => const ShiftManagementView(),
-        ),
+        WorkSubItem(title: 'Danh sách', builder: () => const StaffListView()),
+        WorkSubItem(title: 'Lịch làm', builder: () => const ScheduleView()),
         WorkSubItem(
           title: 'Nghỉ phép',
           builder: () => const LeaveApprovalView(),
-        ),
-        WorkSubItem(
-          title: 'Ngày lễ',
-          builder: () => const FeaturePlaceholderView(title: 'Ngày lễ'),
-        ),
-        WorkSubItem(
-          title: 'Bảng lương',
-          builder: () => const FeaturePlaceholderView(title: 'Bảng lương'),
         ),
       ],
     );
@@ -176,25 +179,15 @@ class WorkView extends ConsumerWidget {
           builder: () =>
               const FeaturePlaceholderView(title: 'Danh sách nhân viên'),
         ),
-        WorkSubItem(
-          title: 'Lịch làm',
-          builder: () => const ScheduleView(),
-        ),
+        WorkSubItem(title: 'Lịch làm', builder: () => const ScheduleView()),
         WorkSubItem(
           title: 'Duyệt nghỉ',
           builder: () => const FeaturePlaceholderView(title: 'Duyệt nghỉ'),
         ),
-        WorkSubItem(
-          title: 'Nghỉ phép',
-          builder: () => const FeaturePlaceholderView(title: 'Nghỉ phép'),
-        ),
+        WorkSubItem(title: 'Nghỉ phép', builder: () => const LeaveView()),
         WorkSubItem(
           title: 'Ngày lễ',
           builder: () => const FeaturePlaceholderView(title: 'Ngày lễ'),
-        ),
-        WorkSubItem(
-          title: 'Bảng lương',
-          builder: () => const FeaturePlaceholderView(title: 'Bảng lương'),
         ),
       ],
     );
@@ -202,7 +195,13 @@ class WorkView extends ConsumerWidget {
     final luongItem = WorkItem(
       title: 'Lương của tôi',
       icon: Icons.payments_outlined,
-      builder: () => const FeaturePlaceholderView(title: 'Lương của tôi'),
+      builder: () => const PayrollView(),
+    );
+
+    final chamCongItem = WorkItem(
+      title: 'Chấm công',
+      icon: Icons.fingerprint_rounded,
+      builder: () => const AttendanceView(),
     );
 
     // Quản lý bán hàng Items
@@ -212,11 +211,13 @@ class WorkView extends ConsumerWidget {
       subItems: [
         WorkSubItem(
           title: 'Danh sách',
-          builder: () => const FeaturePlaceholderView(title: 'Danh sách hàng hóa'),
+          builder: () =>
+              const FeaturePlaceholderView(title: 'Danh sách hàng hóa'),
         ),
         WorkSubItem(
           title: 'Danh mục',
-          builder: () => const FeaturePlaceholderView(title: 'Danh mục hàng hóa'),
+          builder: () =>
+              const FeaturePlaceholderView(title: 'Danh mục hàng hóa'),
         ),
         WorkSubItem(
           title: 'Thương hiệu',
@@ -288,11 +289,13 @@ class WorkView extends ConsumerWidget {
       subItems: [
         WorkSubItem(
           title: 'Hôm nay',
-          builder: () => const FeaturePlaceholderView(title: 'Két tiền hôm nay'),
+          builder: () =>
+              const FeaturePlaceholderView(title: 'Két tiền hôm nay'),
         ),
         WorkSubItem(
           title: 'Lịch sử',
-          builder: () => const FeaturePlaceholderView(title: 'Lịch sử két tiền'),
+          builder: () =>
+              const FeaturePlaceholderView(title: 'Lịch sử két tiền'),
         ),
       ],
     );
@@ -329,7 +332,8 @@ class WorkView extends ConsumerWidget {
     final subscriptionsItem = WorkItem(
       title: 'Subscription',
       icon: Icons.card_membership_outlined,
-      builder: () => const FeaturePlaceholderView(title: 'Quản lý Subscription'),
+      builder: () =>
+          const FeaturePlaceholderView(title: 'Quản lý Subscription'),
     );
     final adminSepayItem = WorkItem(
       title: 'Liên kết SePay',
@@ -376,6 +380,29 @@ class WorkView extends ConsumerWidget {
       items: [luongItem],
     );
 
+    final attendanceGroup = WorkGroup(
+      title: 'Chấm công',
+      icon: Icons.fingerprint_rounded,
+      items: [chamCongItem],
+    );
+
+    final staffEmployeeGroup = WorkGroup(
+      title: 'Nhân viên',
+      icon: Icons.people_outline_rounded,
+      items: [
+        WorkItem(
+          title: 'Lịch làm',
+          icon: Icons.calendar_month_outlined,
+          builder: () => const ScheduleView(),
+        ),
+        WorkItem(
+          title: 'Nghỉ phép',
+          icon: Icons.event_busy_outlined,
+          builder: () => const LeaveView(),
+        ),
+      ],
+    );
+
     // --- Role-based Config matching sidebarRoleConfig in sidebar-role.ts ---
 
     if (role == 'SUPER_ADMIN') {
@@ -417,6 +444,7 @@ class WorkView extends ConsumerWidget {
       ];
     } else if (role == 'BRANCH_MANAGER') {
       return [
+        attendanceGroup,
         WorkGroup(
           title: 'Quản lý',
           icon: Icons.admin_panel_settings_outlined,
@@ -432,6 +460,7 @@ class WorkView extends ConsumerWidget {
       ];
     } else if (role == 'WAREHOUSE_MANAGER') {
       return [
+        attendanceGroup,
         WorkGroup(
           title: 'Quản lý',
           icon: Icons.admin_panel_settings_outlined,
@@ -446,11 +475,8 @@ class WorkView extends ConsumerWidget {
       ];
     } else if (role == 'STAFF') {
       return [
-        WorkGroup(
-          title: 'Quản lý',
-          icon: Icons.admin_panel_settings_outlined,
-          items: [nhanVienItem],
-        ),
+        attendanceGroup,
+        staffEmployeeGroup,
         WorkGroup(
           title: 'Quản lý bán hàng',
           icon: Icons.store_outlined,
@@ -469,10 +495,7 @@ class WorkSubItem {
   final String title;
   final Widget Function() builder;
 
-  const WorkSubItem({
-    required this.title,
-    required this.builder,
-  });
+  const WorkSubItem({required this.title, required this.builder});
 }
 
 class WorkItem {
