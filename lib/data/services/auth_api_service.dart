@@ -30,10 +30,31 @@ class AuthApiService {
     return response.data;
   }
 
+  /// Exchanges a Firebase ID token (from Google sign-in) for backend session
+  /// tokens. `platform: 'mobile'` tells the backend to apply the employee-only
+  /// role gate. Returns the raw LoginResponseDTO map.
+  Future<Map<String, dynamic>> firebaseLogin(String idToken) async {
+    final response = await _dio.post(
+      ApiEndpoints.firebaseLogin,
+      data: {
+        'idToken': idToken,
+        'platform': 'mobile',
+      },
+    );
+    return response.data;
+  }
+
   /// Fetches profile of the currently logged-in user.
   /// Returns raw JSON map representing UserProfileResponseDTO from backend.
   Future<Map<String, dynamic>> getProfile() async {
     final response = await _dio.get(ApiEndpoints.me);
+    return response.data;
+  }
+
+  /// Updates the current user's profile (PATCH /auth/me). Pass only the fields
+  /// to change, e.g. `{ 'email': '...' }`.
+  Future<Map<String, dynamic>> updateProfile(Map<String, dynamic> body) async {
+    final response = await _dio.patch(ApiEndpoints.me, data: body);
     return response.data;
   }
 }

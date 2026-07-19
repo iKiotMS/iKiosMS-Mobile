@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/network/api_exception.dart';
 import '../../../data/repositories/auth/auth_repository.dart';
 import '../../../data/repositories/auth/auth_repository_provider.dart';
 
@@ -53,6 +54,32 @@ class LoginViewModel extends _$LoginViewModel {
       return true;
     } catch (e) {
       // The repository throws an ApiException which has a friendly message.
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: e.toString().replaceAll('Exception: ', ''),
+      );
+      return false;
+    }
+  }
+
+  /// Attempts to log in with Google (Firebase).
+  /// Returns true on success, false on failure/cancel.
+  Future<bool> loginWithGoogle() async {
+    state = state.copyWith(isLoading: true, clearError: true);
+
+    try {
+      await _repository.loginWithGoogle();
+      state = state.copyWith(isLoading: false);
+      return true;
+    } on ApiException catch (e) {
+      // A cancelled picker isn't worth surfacing as an error.
+      if (e.message.contains('hủy')) {
+        state = state.copyWith(isLoading: false, clearError: true);
+      } else {
+        state = state.copyWith(isLoading: false, errorMessage: e.message);
+      }
+      return false;
+    } catch (e) {
       state = state.copyWith(
         isLoading: false,
         errorMessage: e.toString().replaceAll('Exception: ', ''),
