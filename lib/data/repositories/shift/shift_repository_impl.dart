@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dio/dio.dart';
 
 import 'package:geolocator/geolocator.dart';
@@ -29,12 +31,12 @@ class ShiftRepositoryImpl implements ShiftRepository {
         startDate: DateTimeUtils.formatApiDate(startDate),
         endDate: DateTimeUtils.formatApiDate(endDate),
       );
-      print(
+      developer.log(
         '✅ [ShiftRepository] getShifts SUCCESS! Raw response payload: $rawList',
       );
       return rawList.map(ShiftModel.fromJson).toList();
     } on DioException catch (e) {
-      print(
+      developer.log(
         '❌ [ShiftRepository] getShifts FAILED! Error data: ${e.response?.data} | Exception: $e',
       );
       throw ApiException(
@@ -50,12 +52,12 @@ class ShiftRepositoryImpl implements ShiftRepository {
   Future<ShiftModel> getShiftById(String shiftId) async {
     try {
       final raw = await _apiService.getShiftById(shiftId);
-      print(
+      developer.log(
         '✅ [ShiftRepository] getShiftById SUCCESS! Raw response payload: $raw',
       );
       return ShiftModel.fromJson(raw);
     } on DioException catch (e) {
-      print(
+      developer.log(
         '❌ [ShiftRepository] getShiftById FAILED! Error data: ${e.response?.data} | Exception: $e',
       );
       throw ApiException(
@@ -112,7 +114,7 @@ class ShiftRepositoryImpl implements ShiftRepository {
         accuracy: position.accuracy,
       );
 
-      print(
+      developer.log(
         '✅ [ShiftRepository] Check-in API SUCCESS! Raw response payload: $raw',
       );
 
@@ -120,7 +122,7 @@ class ShiftRepositoryImpl implements ShiftRepository {
     } on ApiException {
       rethrow;
     } on DioException catch (e) {
-      print(
+      developer.log(
         '❌ [ShiftRepository] Check-in API FAILED! Error data: ${e.response?.data} | Exception: $e',
       );
       throw ApiException(
