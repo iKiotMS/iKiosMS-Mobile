@@ -36,6 +36,16 @@ class ApiEndpoints {
   // POST /attendances/check-in
   static const String checkIn = '/attendances/check-in';
 
+  // Sổ thu chi (cashflow) — Owner/Manager only (backend requires reports:read).
+  // Query params (fromDate/toDate as yyyy-MM-dd, flowType, paymentMethod, page,
+  // limit) are passed via Dio queryParameters, not baked into the path.
+  static const String cashflowSummary = '/stats/cashflow';
+  static const String cashflowTransactions = '/stats/cashflow/transactions';
+
+  // Branch list — powers the cashflow branch picker (TENANT_OWNER filters by
+  // branch). Query params (limit, status) passed via Dio queryParameters.
+  static const String branches = '/branches';
+
   // Profile
   static const String me = '/auth/me';
 
@@ -73,4 +83,42 @@ class ApiEndpoints {
   static const String leaveRequestBalance = '/leave-requests/balance';
   static const String leaveRequestHandoverPreview =
       '/leave-requests/handover/preview';
+
+  // Dashboard stats (backend scopes these to the caller's branch/tenant automatically)
+  static const String statsOverview = '/stats/overview';
+  static const String statsRevenue = '/stats/revenue';
+  static const String statsRevenueByPaymentMethod = '/stats/revenue-by-payment-method';
+  static const String statsRevenueByStaff = '/stats/revenue-by-staff';
+  static const String statsCashflow = '/stats/cashflow';
+  static const String statsTopProducts = '/stats/top-products';
+  static const String statsInventory = '/stats/inventory';
+
+  // Inventory (per-location stock list — warehouse/branch inventory management)
+  static const String inventory = '/inventory';
+  static String inventoryMinStock(String id) => '/inventory/$id/min-stock';
+  static String inventoryItem(String id) => '/inventory/$id';
+
+  // Stock movements (import/export/return history, and the ADJUST
+  // create/approve/cancel flow — see "Điều chỉnh tồn kho")
+  static const String stockMovements = '/stock-movements';
+  static String stockMovementDetail(String id) => '/stock-movements/$id';
+  static String stockMovementApproveAdjust(String id) => '/stock-movements/$id/approve-adjust';
+  static String stockMovementCancel(String id) => '/stock-movements/$id/cancel';
+
+  // Branch / warehouse settings (view + edit the caller's own location only)
+  static String branchDetail(String id) => '/branches/$id';
+  static String warehouseDetail(String id) => '/warehouses/$id';
+
+  // Warehouse list (used to build the ADJUST location picker for TENANT_OWNER)
+  static const String warehouses = '/warehouses';
+
+  // Promotions — list/detail/usage-log history, plus create/update/deactivate
+  // for TENANT_OWNER/BRANCH_MANAGER (see promotion_permissions.dart).
+  static const String promotions = '/promotions';
+  static String promotionDetail(String id) => '/promotions/$id';
+  static String promotionLogs(String id) => '/promotions/$id/logs';
+
+  // Picker option lists for the promotion create/edit form.
+  static const String categories = '/categories';
+  static const String productItems = '/products/items';
 }

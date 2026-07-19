@@ -99,4 +99,38 @@ class DateTimeUtils {
     }
     return time;
   }
+
+  /// Backend `/stats/revenue` only returns buckets that have orders (sparse).
+  /// Fills the full [fromDate]..[toDate] range so the chart still shows every
+  /// date/month mark even when a bucket has no data.
+  ///
+  /// Mirrors the web dashboard's `generateDateBuckets` (shared/format.ts).
+  /// [groupBy] is `'day'` (bucket format `yyyy-MM-dd`) or `'month'` (`yyyy-MM`).
+  static List<String> generateDateBuckets(
+    DateTime fromDate,
+    DateTime toDate,
+    String groupBy,
+  ) {
+    final buckets = <String>[];
+
+    if (groupBy == 'month') {
+      var cursor = DateTime(fromDate.year, fromDate.month, 1);
+      final endCursor = DateTime(toDate.year, toDate.month, 1);
+      while (!cursor.isAfter(endCursor)) {
+        buckets.add(
+          '${cursor.year}-${cursor.month.toString().padLeft(2, '0')}',
+        );
+        cursor = DateTime(cursor.year, cursor.month + 1, 1);
+      }
+      return buckets;
+    }
+
+    var cursor = DateTime(fromDate.year, fromDate.month, fromDate.day);
+    final end = DateTime(toDate.year, toDate.month, toDate.day);
+    while (!cursor.isAfter(end)) {
+      buckets.add(formatApiDate(cursor));
+      cursor = cursor.add(const Duration(days: 1));
+    }
+    return buckets;
+  }
 }
