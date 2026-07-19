@@ -14,31 +14,28 @@ InventoryApiService inventoryApiService(Ref ref) {
   return InventoryApiService(dio);
 }
 
-/// Makes raw HTTP calls to the `/inventory` backend endpoints.
-///
-/// Response envelope here is `{success, message, data, pagination}` —
-/// `data` is the raw list directly (not nested), unlike `/stats/*`.
+/// Makes raw HTTP calls to `GET /inventory` — only used to populate the
+/// product picker in the stock-adjustment create form (search products at a
+/// given branch/warehouse and show their current stock).
 class InventoryApiService {
   final Dio _dio;
 
   InventoryApiService(this._dio);
 
   Future<Map<String, dynamic>> getList({
+    required String locationId,
+    required String locationType,
+    String? search,
     required int page,
     required int limit,
-    String? locationId,
-    String? locationType,
-    bool? isLowStock,
-    String? search,
   }) async {
     final response = await _dio.get(
       ApiEndpoints.inventory,
       queryParameters: {
+        'locationId': locationId,
+        'locationType': locationType,
         'page': page,
         'limit': limit,
-        if (locationId != null) 'locationId': locationId,
-        if (locationType != null) 'locationType': locationType,
-        if (isLowStock == true) 'isLowStock': true,
         if (search != null && search.isNotEmpty) 'search': search,
       },
     );
@@ -50,24 +47,5 @@ class InventoryApiService {
       };
     }
     return {'data': const <Map<String, dynamic>>[], 'pagination': const {}};
-  }
-
-  Future<Map<String, dynamic>> updateMinStock({
-    required String inventoryId,
-    required int minStock,
-  }) async {
-    final response = await _dio.patch(
-      ApiEndpoints.inventoryMinStock(inventoryId),
-      data: {'minStock': minStock},
-    );
-    final data = response.data;
-    if (data is Map && data['data'] is Map) {
-      return (data['data'] as Map).cast<String, dynamic>();
-    }
-    return {};
-  }
-
-  Future<void> removeFromLocation(String inventoryId) async {
-    await _dio.delete(ApiEndpoints.inventoryItem(inventoryId));
   }
 }

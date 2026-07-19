@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/constants/api_constants.dart';
 import '../../core/network/api_client.dart';
+import '../models/stock_movement_model.dart';
 
 part 'stock_movement_api_service.g.dart';
 
@@ -16,9 +17,13 @@ StockMovementApiService stockMovementApiService(Ref ref) {
 
 /// Makes raw HTTP calls to the `/stock-movements` backend endpoints.
 ///
-/// Only the read endpoints are implemented — this feature is a read-only
-/// history view; creating/opening/closing/shipping/receiving/cancelling
-/// movements is a separate task ("Xác nhận đơn nhập/xuất hàng").
+/// The read endpoints (`getList`/`getDetail`) back the read-only IMPORT/
+/// EXPORT/RETURN history view ("Lịch sử nhập/xuất kho") but are reused as-is
+/// by the ADJUST flow ("Điều chỉnh tồn kho") too, since both movement kinds
+/// live in the same collection/endpoint. `createAdjustment`/`approveAdjust`/
+/// `cancel` back only the ADJUST flow — opening/closing/shipping/receiving
+/// IMPORT/EXPORT movements is still a separate, unimplemented task
+/// ("Xác nhận nhập"/"Xác nhận xuất").
 ///
 /// `GET /stock-movements` accepts exactly `page`, `limit`, `status`,
 /// `movementType` server-side — no date-range/location/search params exist.
@@ -59,5 +64,47 @@ class StockMovementApiService {
       return (data['data'] as Map).cast<String, dynamic>();
     }
     return {};
+  }
+
+  Map<String, dynamic> _unwrap(Response response) {
+    final data = response.data;
+    if (data is Map && data['data'] is Map) {
+      return (data['data'] as Map).cast<String, dynamic>();
+    }
+    return {};
+  }
+
+  /// Creates a `PENDING` ADJUST request. `toLocationId`/`toLocationType` are
+  /// sent equal to `fromLocationId`/`fromLocationType`: the Mongoose schema
+  /// requires them unconditionally even though the backend's ADJUST branch
+  /// never reads them (confirmed against `StockMovementRequest.js` +
+  /// `StockMovementService.create`).
+  Future<Map<String, dynamic>> createAdjustment({
+    required String locationId,
+    required String locationType,
+    String? note,
+    required List<AdjustmentDetailInput> details,
+  }) async {
+    final response = await _dio.post(
+      ApiEndpoints.stockMovements,
+      data: {
+        'movementType': 'ADJUST',
+        'fromLocationId': locationId,
+        'fromLocationType': locationType,
+        'toLocationId': locationId,
+        'toLocationType': locationType,
+        if (note != null && note.isNotEmpty) 'note': note,
+        'details': details.map((d) => d.toJson()).toList(),
+      },
+    );
+    return _unwrap(response);
+  }
+
+  Future<Map<String, dynamic>> approveAdjust(String id) async {
+    return _unwrap(await _dio.patch(ApiEndpoints.stockMovementApproveAdjust(id)));
+  }
+
+  Future<Map<String, dynamic>> cancel(String id) async {
+    return _unwrap(await _dio.patch(ApiEndpoints.stockMovementCancel(id)));
   }
 }

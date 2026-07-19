@@ -123,6 +123,30 @@ class StockMovement {
   }
 }
 
+/// One line of a `POST /stock-movements` (ADJUST) request payload — the
+/// counted quantity for a single product at the adjustment's location.
+/// `quantity` (system stock at request time) is deliberately omitted: the
+/// backend auto-fills it from the current `Inventory.stock`, avoiding a
+/// stale-read race between when the mobile app fetched the product picker
+/// and when the request is submitted.
+class AdjustmentDetailInput {
+  final String productItemId;
+  final num receivedQuantity;
+  final String? note;
+
+  const AdjustmentDetailInput({
+    required this.productItemId,
+    required this.receivedQuantity,
+    this.note,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'productItemId': productItemId,
+    'receivedQuantity': receivedQuantity,
+    if (note != null && note!.isNotEmpty) 'note': note,
+  };
+}
+
 class StockMovementPagination {
   final int total;
   final int page;

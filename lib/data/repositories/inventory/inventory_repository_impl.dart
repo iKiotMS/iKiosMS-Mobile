@@ -28,49 +28,24 @@ class InventoryRepositoryImpl implements InventoryRepository {
   }
 
   @override
-  Future<InventoryListResult> getList({
+  Future<List<InventoryItem>> getList({
+    required String locationId,
+    required String locationType,
+    String? search,
     required int page,
     required int limit,
-    String? locationId,
-    String? locationType,
-    bool isLowStockOnly = false,
-    String? search,
   }) {
     return _run(() async {
       final raw = await _apiService.getList(
-        page: page,
-        limit: limit,
         locationId: locationId,
         locationType: locationType,
-        isLowStock: isLowStockOnly ? true : null,
         search: search,
+        page: page,
+        limit: limit,
       );
-      final items = (raw['data'] as List)
-          .map((e) => InventoryItemModel.fromJson(e as Map<String, dynamic>))
+      return (raw['data'] as List)
+          .map((e) => InventoryItem.fromJson(e as Map<String, dynamic>))
           .toList();
-      final pagination = InventoryPagination.fromJson(
-        raw['pagination'] as Map<String, dynamic>,
-      );
-      return InventoryListResult(items: items, pagination: pagination);
     });
-  }
-
-  @override
-  Future<InventoryItemModel> updateMinStock({
-    required String inventoryId,
-    required int minStock,
-  }) {
-    return _run(() async {
-      final raw = await _apiService.updateMinStock(
-        inventoryId: inventoryId,
-        minStock: minStock,
-      );
-      return InventoryItemModel.fromJson(raw);
-    });
-  }
-
-  @override
-  Future<void> removeFromLocation(String inventoryId) {
-    return _run(() => _apiService.removeFromLocation(inventoryId));
   }
 }

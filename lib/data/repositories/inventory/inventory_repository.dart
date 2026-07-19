@@ -1,22 +1,12 @@
 import '../../models/inventory_item_model.dart';
 
-/// Abstract interface for the per-location inventory repository.
+/// Abstract interface for the inventory (product-at-location) repository.
 abstract class InventoryRepository {
-  Future<InventoryListResult> getList({
+  Future<List<InventoryItem>> getList({
+    required String locationId,
+    required String locationType,
+    String? search,
     required int page,
     required int limit,
-    String? locationId,
-    String? locationType,
-    bool isLowStockOnly = false,
-    String? search,
   });
-
-  /// 0 disables the low-stock alert for this item.
-  Future<InventoryItemModel> updateMinStock({
-    required String inventoryId,
-    required int minStock,
-  });
-
-  /// Only allowed by the backend when the item's stock is 0.
-  Future<void> removeFromLocation(String inventoryId);
 }

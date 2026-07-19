@@ -43,9 +43,8 @@ class SalesChart extends ConsumerWidget {
       for (var i = 0; i < buckets.length; i++)
         FlSpot(i.toDouble(), (seriesByBucket[buckets[i]] ?? 0).toDouble()),
     ];
-    final maxY = spots.isEmpty
-        ? 100.0
-        : spots.map((s) => s.y).reduce((a, b) => a > b ? a : b) * 1.2;
+    final rawMaxY = spots.isEmpty ? 0.0 : spots.map((s) => s.y).reduce((a, b) => a > b ? a : b);
+    final maxY = rawMaxY > 0 ? rawMaxY * 1.2 : 100.0;
 
     return Card(
       elevation: 0,

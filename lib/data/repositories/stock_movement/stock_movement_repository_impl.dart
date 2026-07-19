@@ -54,4 +54,38 @@ class StockMovementRepositoryImpl implements StockMovementRepository {
       return StockMovement.fromJson(raw);
     });
   }
+
+  @override
+  Future<StockMovement> createAdjustment({
+    required String locationId,
+    required String locationType,
+    String? note,
+    required List<AdjustmentDetailInput> details,
+  }) {
+    return _run(() async {
+      final raw = await _apiService.createAdjustment(
+        locationId: locationId,
+        locationType: locationType,
+        note: note,
+        details: details,
+      );
+      return StockMovement.fromJson(raw);
+    });
+  }
+
+  @override
+  Future<StockMovement> approveAdjust(String id) {
+    return _run(() async {
+      final raw = await _apiService.approveAdjust(id);
+      return StockMovement.fromJson(raw);
+    });
+  }
+
+  @override
+  Future<StockMovement> cancel(String id) {
+    return _run(() async {
+      final raw = await _apiService.cancel(id);
+      return StockMovement.fromJson(raw);
+    });
+  }
 }

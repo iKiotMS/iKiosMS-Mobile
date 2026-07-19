@@ -50,11 +50,19 @@ class ApiEndpoints {
   static String inventoryMinStock(String id) => '/inventory/$id/min-stock';
   static String inventoryItem(String id) => '/inventory/$id';
 
-  // Stock movements (import/export/return/adjust history — read-only here)
+  // Stock movements (import/export/return history, and the ADJUST
+  // create/approve/cancel flow — see "Điều chỉnh tồn kho")
   static const String stockMovements = '/stock-movements';
   static String stockMovementDetail(String id) => '/stock-movements/$id';
+  static String stockMovementApproveAdjust(String id) => '/stock-movements/$id/approve-adjust';
+  static String stockMovementCancel(String id) => '/stock-movements/$id/cancel';
 
   // Branch / warehouse settings (view + edit the caller's own location only)
   static String branchDetail(String id) => '/branches/$id';
   static String warehouseDetail(String id) => '/warehouses/$id';
+
+  // Branch / warehouse lists (used to build the ADJUST location picker for
+  // TENANT_OWNER, who has no single owned branch/warehouse)
+  static const String branches = '/branches';
+  static const String warehouses = '/warehouses';
 }
