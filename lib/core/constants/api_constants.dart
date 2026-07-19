@@ -12,7 +12,11 @@ class ApiEndpoints {
 
   // Auth
   static const String login = '/auth/login';
+  static const String firebaseLogin = '/auth/firebase-login';
   static const String refresh = '/auth/refresh';
+
+  // Push notifications — register/unregister this device's FCM token.
+  static const String deviceToken = '/notifications/device-token';
 
   // GET /working-schedules?userId=123&startDate=yyyy-MM-dd&endDate=yyyy-MM-dd
   static String shifts(String userId, String startDate, String endDate) {

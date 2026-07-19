@@ -31,6 +31,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
         );
   }
 
+  void _onGoogleLogin() {
+    FocusScope.of(context).unfocus();
+    ref.read(loginViewModelProvider.notifier).loginWithGoogle();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(loginViewModelProvider);
@@ -118,6 +123,32 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           'Đăng Nhập',
                           style: TextStyle(fontSize: 16),
                         ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const Expanded(child: Divider()),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'Hoặc',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                    ),
+                    const Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                OutlinedButton.icon(
+                  onPressed: state.isLoading ? null : _onGoogleLogin,
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  icon: const Icon(Icons.g_mobiledata_rounded, size: 28),
+                  label: const Text(
+                    'Đăng nhập với Google',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ],
             ),

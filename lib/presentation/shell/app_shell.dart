@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../ai_chat/views/ai_chat_view.dart';
 import '../auth/viewmodels/user_profile_provider.dart';
 import '../../core/auth/auth_token_provider.dart';
-import '../profile/profile_placeholder_view.dart';
+import '../../core/push/push_service.dart';
+import '../profile/views/profile_view.dart';
 import '../work/views/work_view.dart';
 import 'tab_placeholders.dart';
 
@@ -21,6 +22,19 @@ class _AppShellState extends ConsumerState<AppShell> {
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    // Once the user reaches the shell they're authenticated — register this
+    // device for push (asks permission on Android 13+/iOS the first time).
+    // Fire-and-forget; failures are swallowed inside PushService.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final push = ref.read(pushServiceProvider);
+      push.register();
+      push.initForeground();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(userProfileProvider);
     final theme = Theme.of(context);
@@ -34,7 +48,7 @@ class _AppShellState extends ConsumerState<AppShell> {
           const WorkView(),
           const NotificationsView(),
           if (isTenant) const AIChatView(),
-          const ProfilePlaceholderView(),
+          const ProfileView(),
         ];
 
         // Ensure selectedIndex doesn't go out of bounds if tabs count changes dynamically

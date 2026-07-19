@@ -6,6 +6,9 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Firebase (Google Sign-In + FCM) is applied conditionally at the bottom of
+    // this file — only when google-services.json exists — so the project still
+    // builds before Firebase is configured.
 }
 
 android {
@@ -16,6 +19,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -64,4 +68,15 @@ android {
 
 flutter {
     source = "../.."
+}
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+}
+
+// Apply the Google Services plugin only when google-services.json is present.
+// This lets the app build before Firebase is configured — Google sign-in and
+// push notifications simply stay disabled (main.dart guards Firebase init)
+// until you add the file. See FIREBASE_SETUP.md.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }
