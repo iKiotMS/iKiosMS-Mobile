@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/viewmodels/user_profile_provider.dart';
+import '../../location_settings/views/location_settings_view.dart';
+import '../../promotion/views/promotion_list_view.dart';
 import '../../cashflow/views/cash_flow_view.dart';
 import '../../schedule/views/schedule_view.dart';
+import '../../stock_adjustment/views/adjustment_list_view.dart';
+import '../../stock_movement_history/views/stock_movement_history_view.dart';
 import '../../transfers/views/transfers_list_view.dart';
 import 'feature_placeholder_view.dart';
 
@@ -142,6 +146,10 @@ class WorkView extends ConsumerWidget {
           builder: () => const ScheduleView(),
         ),
         WorkSubItem(
+          title: 'Duyệt nghỉ',
+          builder: () => const FeaturePlaceholderView(title: 'Duyệt nghỉ'),
+        ),
+        WorkSubItem(
           title: 'Nghỉ phép',
           builder: () => const FeaturePlaceholderView(title: 'Nghỉ phép'),
         ),
@@ -179,6 +187,10 @@ class WorkView extends ConsumerWidget {
           title: 'Thương hiệu',
           builder: () => const FeaturePlaceholderView(title: 'Thương hiệu'),
         ),
+        WorkSubItem(
+          title: 'Điều chỉnh chi nhánh, kho',
+          builder: () => const LocationSettingsView(),
+        ),
       ],
     );
 
@@ -199,8 +211,12 @@ class WorkView extends ConsumerWidget {
           builder: () => const TransfersListView(),
         ),
         WorkSubItem(
+          title: 'Lịch sử nhập/xuất kho',
+          builder: () => const StockMovementHistoryView(),
+        ),
+        WorkSubItem(
           title: 'Điều chỉnh tồn kho',
-          builder: () => const FeaturePlaceholderView(title: 'Điều chỉnh tồn kho'),
+          builder: () => const AdjustmentListView(),
         ),
       ],
     );
@@ -218,8 +234,12 @@ class WorkView extends ConsumerWidget {
           builder: () => const TransfersListView(),
         ),
         WorkSubItem(
+          title: 'Lịch sử nhập/xuất kho',
+          builder: () => const StockMovementHistoryView(),
+        ),
+        WorkSubItem(
           title: 'Điều chỉnh tồn kho',
-          builder: () => const FeaturePlaceholderView(title: 'Điều chỉnh tồn kho'),
+          builder: () => const AdjustmentListView(),
         ),
       ],
     );
@@ -260,7 +280,7 @@ class WorkView extends ConsumerWidget {
     final khuyenMaiItem = WorkItem(
       title: 'Khuyến mãi',
       icon: Icons.local_offer_outlined,
-      builder: () => const FeaturePlaceholderView(title: 'Khuyến mãi'),
+      builder: () => const PromotionListView(),
     );
 
     // SUPER_ADMIN Items

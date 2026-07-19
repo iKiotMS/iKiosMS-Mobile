@@ -4,6 +4,8 @@ class UserModel {
   final String email;
   final String role;
   final String? tenantId;
+  final String? branchId;
+  final String? warehouseId;
   final String firstName;
   final String lastName;
   final String status;
@@ -14,6 +16,8 @@ class UserModel {
     required this.email,
     required this.role,
     this.tenantId,
+    this.branchId,
+    this.warehouseId,
     required this.firstName,
     required this.lastName,
     required this.status,
@@ -26,6 +30,8 @@ class UserModel {
       email: json['email']?.toString() ?? '',
       role: json['role']?.toString() ?? '',
       tenantId: json['tenantId']?.toString(),
+      branchId: json['branchId']?.toString(),
+      warehouseId: json['warehouseId']?.toString(),
       firstName: json['firstName']?.toString() ?? '',
       lastName: json['lastName']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
@@ -40,6 +46,8 @@ class UserModel {
       email: json['email']?.toString() ?? '',
       role: json['role']?.toString() ?? '',
       tenantId: json['tenantId']?.toString(),
+      branchId: json['branchId']?.toString(),
+      warehouseId: json['warehouseId']?.toString(),
       firstName: profile?['firstName']?.toString() ?? '',
       lastName: profile?['lastName']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
