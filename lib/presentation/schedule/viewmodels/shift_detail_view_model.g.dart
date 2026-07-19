@@ -7,7 +7,7 @@ part of 'shift_detail_view_model.dart';
 // **************************************************************************
 
 String _$shiftDetailViewModelHash() =>
-    r'afd41f12431cbcb6619275a6d6a0ac36fbf6ed4a';
+    r'5e4098243e5cf582f7ad636c3a745d27e7e73b07';
 
 /// Copied from Dart SDK
 class _SystemHash {
