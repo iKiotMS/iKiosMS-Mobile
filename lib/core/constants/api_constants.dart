@@ -45,4 +45,32 @@ class ApiEndpoints {
   static String aiConversationDetail(String id) => '/ai/conversations/$id';
   static String deleteAiConversation(String id) => '/ai/conversations/$id';
   static String renameAiConversation(String id) => '/ai/conversations/$id';
+
+  // Staff (Branch Manager)
+  static const String staff = '/staff';
+  static String staffById(String id) => '/staff/$id';
+  static String staffAccount(String id) => '/staff/$id/account';
+  static String staffAccountPassword(String id) => '/staff/$id/account/password';
+  static String staffAccountDeactivate(String id) =>
+      '/staff/$id/account/deactivate';
+  static String staffLeaveBalance(String id) => '/staff/$id/leave-balance';
+
+  // Shift templates + working schedules (Branch Manager)
+  static const String shiftTemplates = '/shift-templates';
+  static String shiftTemplateById(String id) => '/shift-templates/$id';
+  static const String workingSchedulesBulk = '/working-schedules/bulk';
+  static const String workingSchedulesBranches = '/working-schedules/branches';
+  static String workingScheduleById(String id) => '/working-schedules/$id';
+
+  // Leave requests (Branch Manager)
+  static const String leaveRequestsBranches = '/leave-requests/branches';
+  static String leaveRequestApprove(String id) =>
+      '/leave-requests/$id/approve';
+  static String leaveRequestReject(String id) => '/leave-requests/$id/reject';
+  static const String leaveRequestEmergency = '/leave-requests/emergency';
+  static const String leaveRequests = '/leave-requests';
+  static String leaveRequestCancel(String id) => '/leave-requests/$id/cancel';
+  static const String leaveRequestBalance = '/leave-requests/balance';
+  static const String leaveRequestHandoverPreview =
+      '/leave-requests/handover/preview';
 }
