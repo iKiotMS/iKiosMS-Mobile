@@ -25,13 +25,13 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id']?.toString() ?? '',
+      id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
       phoneNumber: json['phoneNumber']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
       role: json['role']?.toString() ?? '',
-      tenantId: json['tenantId']?.toString(),
-      branchId: json['branchId']?.toString(),
-      warehouseId: json['warehouseId']?.toString(),
+      tenantId: _resolveId(json['tenantId']),
+      branchId: _resolveId(json['branchId']),
+      warehouseId: _resolveId(json['warehouseId']),
       firstName: json['firstName']?.toString() ?? '',
       lastName: json['lastName']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
@@ -41,17 +41,32 @@ class UserModel {
   factory UserModel.fromProfileJson(Map<String, dynamic> json) {
     final profile = json['profile'] as Map<String, dynamic>?;
     return UserModel(
-      id: json['id']?.toString() ?? '',
+      id: json['_id']?.toString() ?? json['id']?.toString() ?? '',
       phoneNumber: json['phoneNumber']?.toString() ?? '',
       email: json['email']?.toString() ?? '',
       role: json['role']?.toString() ?? '',
-      tenantId: json['tenantId']?.toString(),
-      branchId: json['branchId']?.toString(),
-      warehouseId: json['warehouseId']?.toString(),
+      tenantId: _resolveId(json['tenantId']),
+      branchId: _resolveId(json['branchId']),
+      warehouseId: _resolveId(json['warehouseId']),
       firstName: profile?['firstName']?.toString() ?? '',
       lastName: profile?['lastName']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
     );
+  }
+
+  static String? _resolveId(dynamic ref) {
+    if (ref == null) return null;
+    if (ref is String) {
+      final value = ref.trim();
+      return value.isEmpty ? null : value;
+    }
+    if (ref is Map) {
+      final id = ref['_id']?.toString() ?? ref['id']?.toString();
+      if (id == null || id.isEmpty) return null;
+      return id;
+    }
+    final value = ref.toString();
+    return value.isEmpty ? null : value;
   }
 
   String get fullName {

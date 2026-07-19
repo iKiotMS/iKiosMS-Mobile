@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/viewmodels/user_profile_provider.dart';
+import '../../cashflow/views/cash_flow_view.dart';
+import '../../leave_approval/views/leave_approval_view.dart';
 import '../../location_settings/views/location_settings_view.dart';
 import '../../promotion/views/promotion_list_view.dart';
-import '../../cashflow/views/cash_flow_view.dart';
 import '../../schedule/views/schedule_view.dart';
+import '../../shift_management/views/shift_management_view.dart';
+import '../../staff/views/staff_list_view.dart';
 import '../../stock_adjustment/views/adjustment_list_view.dart';
 import '../../transfers/views/transfers_list_view.dart';
 import 'feature_placeholder_view.dart';
@@ -132,13 +135,46 @@ class WorkView extends ConsumerWidget {
       builder: () => const CashFlowView(),
     );
 
+    // HR mobile hiện chỉ scope chi nhánh (BRANCH_MANAGER).
+    final nhanVienBranchItem = WorkItem(
+      title: 'Nhân viên',
+      icon: Icons.people_outline_rounded,
+      subItems: [
+        WorkSubItem(
+          title: 'Danh sách',
+          builder: () => const StaffListView(),
+        ),
+        WorkSubItem(
+          title: 'Lịch làm',
+          builder: () => const ScheduleView(),
+        ),
+        WorkSubItem(
+          title: 'Ca làm',
+          builder: () => const ShiftManagementView(),
+        ),
+        WorkSubItem(
+          title: 'Nghỉ phép',
+          builder: () => const LeaveApprovalView(),
+        ),
+        WorkSubItem(
+          title: 'Ngày lễ',
+          builder: () => const FeaturePlaceholderView(title: 'Ngày lễ'),
+        ),
+        WorkSubItem(
+          title: 'Bảng lương',
+          builder: () => const FeaturePlaceholderView(title: 'Bảng lương'),
+        ),
+      ],
+    );
+
     final nhanVienItem = WorkItem(
       title: 'Nhân viên',
       icon: Icons.people_outline_rounded,
       subItems: [
         WorkSubItem(
           title: 'Danh sách',
-          builder: () => const FeaturePlaceholderView(title: 'Danh sách nhân viên'),
+          builder: () =>
+              const FeaturePlaceholderView(title: 'Danh sách nhân viên'),
         ),
         WorkSubItem(
           title: 'Lịch làm',
@@ -384,7 +420,7 @@ class WorkView extends ConsumerWidget {
         WorkGroup(
           title: 'Quản lý',
           icon: Icons.admin_panel_settings_outlined,
-          items: [tongQuanItem, soThuChiItem, nhanVienItem],
+          items: [tongQuanItem, soThuChiItem, nhanVienBranchItem],
         ),
         WorkGroup(
           title: 'Quản lý bán hàng',

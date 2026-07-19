@@ -5,7 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Note: cannot be `const` because dotenv.env is a runtime map.
 String get kBaseUrl => dotenv.env['BACKEND_URL'] ?? '';
 
-
 // Endpoint paths — change these if your backend routes change.
 class ApiEndpoints {
   ApiEndpoints._(); // prevent instantiation
@@ -30,8 +29,7 @@ class ApiEndpoints {
   }
 
   // GET /working-schedules/{shiftId}
-  static String shiftDetail(String shiftId) =>
-      '/working-schedules/$shiftId';
+  static String shiftDetail(String shiftId) => '/working-schedules/$shiftId';
 
   // POST /attendances/check-in
   static const String checkIn = '/attendances/check-in';
@@ -56,10 +54,39 @@ class ApiEndpoints {
   static String deleteAiConversation(String id) => '/ai/conversations/$id';
   static String renameAiConversation(String id) => '/ai/conversations/$id';
 
+  // Staff (Branch Manager)
+  static const String staff = '/staff';
+  static String staffById(String id) => '/staff/$id';
+  static String staffAccount(String id) => '/staff/$id/account';
+  static String staffAccountPassword(String id) =>
+      '/staff/$id/account/password';
+  static String staffAccountDeactivate(String id) =>
+      '/staff/$id/account/deactivate';
+  static String staffLeaveBalance(String id) => '/staff/$id/leave-balance';
+
+  // Shift templates + working schedules (Branch Manager)
+  static const String shiftTemplates = '/shift-templates';
+  static String shiftTemplateById(String id) => '/shift-templates/$id';
+  static const String workingSchedulesBulk = '/working-schedules/bulk';
+  static const String workingSchedulesBranches = '/working-schedules/branches';
+  static String workingScheduleById(String id) => '/working-schedules/$id';
+
+  // Leave requests (Branch Manager)
+  static const String leaveRequestsBranches = '/leave-requests/branches';
+  static String leaveRequestApprove(String id) => '/leave-requests/$id/approve';
+  static String leaveRequestReject(String id) => '/leave-requests/$id/reject';
+  static const String leaveRequestEmergency = '/leave-requests/emergency';
+  static const String leaveRequests = '/leave-requests';
+  static String leaveRequestCancel(String id) => '/leave-requests/$id/cancel';
+  static const String leaveRequestBalance = '/leave-requests/balance';
+  static const String leaveRequestHandoverPreview =
+      '/leave-requests/handover/preview';
+
   // Dashboard stats (backend scopes these to the caller's branch/tenant automatically)
   static const String statsOverview = '/stats/overview';
   static const String statsRevenue = '/stats/revenue';
-  static const String statsRevenueByPaymentMethod = '/stats/revenue-by-payment-method';
+  static const String statsRevenueByPaymentMethod =
+      '/stats/revenue-by-payment-method';
   static const String statsRevenueByStaff = '/stats/revenue-by-staff';
   static const String statsCashflow = '/stats/cashflow';
   static const String statsTopProducts = '/stats/top-products';
@@ -74,7 +101,8 @@ class ApiEndpoints {
   // create/approve/cancel flow — see "Điều chỉnh tồn kho")
   static const String stockMovements = '/stock-movements';
   static String stockMovementDetail(String id) => '/stock-movements/$id';
-  static String stockMovementApproveAdjust(String id) => '/stock-movements/$id/approve-adjust';
+  static String stockMovementApproveAdjust(String id) =>
+      '/stock-movements/$id/approve-adjust';
   static String stockMovementCancel(String id) => '/stock-movements/$id/cancel';
 
   // Branch / warehouse settings (view + edit the caller's own location only)
