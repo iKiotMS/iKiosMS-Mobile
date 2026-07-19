@@ -245,19 +245,6 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
           title: request.staffName,
           statusLabel: request.statusLabel,
           statusColor: _statusColor(request.status),
-          children: [
-            Text(
-              '${_fmtDate(request.startDate)} → ${_fmtDate(request.endDate)}'
-              ' (${request.totalDays} ngày)',
-            ),
-            const SizedBox(height: 8),
-            Text('Lý do: ${request.reason}'),
-            if (request.reviewNote != null &&
-                request.reviewNote!.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text('Ghi chú duyệt: ${request.reviewNote}'),
-            ],
-          ],
           actions: [
             if (canReview) ...[
               DetailActionButton(
@@ -292,6 +279,19 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
                 },
               ),
           ],
+          children: [
+            Text(
+              '${_fmtDate(request.startDate)} → ${_fmtDate(request.endDate)}'
+              ' (${request.totalDays} ngày)',
+            ),
+            const SizedBox(height: 8),
+            Text('Lý do: ${request.reason}'),
+            if (request.reviewNote != null &&
+                request.reviewNote!.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text('Ghi chú duyệt: ${request.reviewNote}'),
+            ],
+          ],
         );
       },
     );
@@ -311,6 +311,27 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
       builder: (ctx) {
         return CenteredDetailCard(
           title: 'Duyệt nghỉ phép',
+          actions: [
+            DetailActionButton(
+              label: 'Xác nhận duyệt',
+              icon: Icons.check_rounded,
+              filled: true,
+              onPressed: () async {
+                if (!formKey.currentState!.validate()) return;
+                final ok = await ref
+                    .read(leaveApprovalViewModelProvider.notifier)
+                    .approve(
+                      request,
+                      ApproveLeaveInput(
+                        paidLeaveDays: int.parse(paidCtrl.text),
+                        unpaidLeaveDays: int.parse(unpaidCtrl.text),
+                        reviewNote: noteCtrl.text,
+                      ),
+                    );
+                if (ctx.mounted && ok) Navigator.pop(ctx);
+              },
+            ),
+          ],
           children: [
             Text('Nhân viên: ${request.staffName}'),
             Text('Số ngày: ${request.totalDays}'),
@@ -351,27 +372,6 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
               ),
             ),
           ],
-          actions: [
-            DetailActionButton(
-              label: 'Xác nhận duyệt',
-              icon: Icons.check_rounded,
-              filled: true,
-              onPressed: () async {
-                if (!formKey.currentState!.validate()) return;
-                final ok = await ref
-                    .read(leaveApprovalViewModelProvider.notifier)
-                    .approve(
-                      request,
-                      ApproveLeaveInput(
-                        paidLeaveDays: int.parse(paidCtrl.text),
-                        unpaidLeaveDays: int.parse(unpaidCtrl.text),
-                        reviewNote: noteCtrl.text,
-                      ),
-                    );
-                if (ctx.mounted && ok) Navigator.pop(ctx);
-              },
-            ),
-          ],
         );
       },
     );
@@ -393,18 +393,6 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
       builder: (ctx) {
         return CenteredDetailCard(
           title: 'Từ chối đơn nghỉ',
-          children: [
-            Form(
-              key: formKey,
-              child: TextFormField(
-                controller: noteCtrl,
-                decoration: const InputDecoration(labelText: 'Lý do từ chối'),
-                maxLines: 3,
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? 'Bắt buộc' : null,
-              ),
-            ),
-          ],
           actions: [
             DetailActionButton(
               label: 'Từ chối',
@@ -418,6 +406,18 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
                     .reject(request.id, noteCtrl.text);
                 if (ctx.mounted && ok) Navigator.pop(ctx);
               },
+            ),
+          ],
+          children: [
+            Form(
+              key: formKey,
+              child: TextFormField(
+                controller: noteCtrl,
+                decoration: const InputDecoration(labelText: 'Lý do từ chối'),
+                maxLines: 3,
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? 'Bắt buộc' : null,
+              ),
             ),
           ],
         );
@@ -468,6 +468,38 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
           builder: (ctx, setLocal) {
             return CenteredDetailCard(
               title: 'Xin nghỉ phép',
+              actions: [
+                DetailActionButton(
+                  label: 'Gửi đơn',
+                  icon: Icons.send_rounded,
+                  filled: true,
+                  onPressed: () async {
+                    if (!formKey.currentState!.validate()) return;
+                    if (start == null || end == null) return;
+                    if (state.staffOptions.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Cần có nhân viên trong chi nhánh để bàn giao.',
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+                    final ok = await ref
+                        .read(leaveApprovalViewModelProvider.notifier)
+                        .createPersonal(
+                          CreatePersonalLeaveInput(
+                            startDate: DateTimeUtils.formatApiDate(start!),
+                            endDate: DateTimeUtils.formatApiDate(end!),
+                            reason: reasonCtrl.text,
+                            handoverToUserId: handoverId,
+                          ),
+                        );
+                    if (ctx.mounted && ok) Navigator.pop(ctx);
+                  },
+                ),
+              ],
               children: [
                 if (state.remainingLeaveDays != null)
                   Text('Phép còn: ${state.remainingLeaveDays} ngày'),
@@ -560,38 +592,6 @@ class _LeaveApprovalViewState extends ConsumerState<LeaveApprovalView> {
                       ),
                     ],
                   ),
-                ),
-              ],
-              actions: [
-                DetailActionButton(
-                  label: 'Gửi đơn',
-                  icon: Icons.send_rounded,
-                  filled: true,
-                  onPressed: () async {
-                    if (!formKey.currentState!.validate()) return;
-                    if (start == null || end == null) return;
-                    if (state.staffOptions.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            'Cần có nhân viên trong chi nhánh để bàn giao.',
-                          ),
-                        ),
-                      );
-                      return;
-                    }
-                    final ok = await ref
-                        .read(leaveApprovalViewModelProvider.notifier)
-                        .createPersonal(
-                          CreatePersonalLeaveInput(
-                            startDate: DateTimeUtils.formatApiDate(start!),
-                            endDate: DateTimeUtils.formatApiDate(end!),
-                            reason: reasonCtrl.text,
-                            handoverToUserId: handoverId,
-                          ),
-                        );
-                    if (ctx.mounted && ok) Navigator.pop(ctx);
-                  },
                 ),
               ],
             );

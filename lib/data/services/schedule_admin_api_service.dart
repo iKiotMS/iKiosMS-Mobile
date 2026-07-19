@@ -65,8 +65,8 @@ class ScheduleAdminApiService {
       queryParameters: {
         'page': page,
         'recordPerPage': recordPerPage,
-        if (startDate != null) 'startDate': startDate,
-        if (endDate != null) 'endDate': endDate,
+        'startDate': ?startDate,
+        'endDate': ?endDate,
       },
     );
     return _asMap(response.data);

@@ -98,6 +98,46 @@ class ShiftManagementView extends ConsumerWidget {
           builder: (ctx, setLocal) {
             return CenteredDetailCard(
               title: 'Phân ca mới',
+              actions: [
+                DetailActionButton(
+                  label: 'Lưu phân ca',
+                  icon: Icons.save_outlined,
+                  filled: true,
+                  onPressed: () async {
+                    if (templateId == null || templateId!.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Chọn ca mẫu.')),
+                      );
+                      return;
+                    }
+                    if (selectedDate == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Chọn ngày làm việc.')),
+                      );
+                      return;
+                    }
+                    if (selectedStaff.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Chọn ít nhất một nhân viên.'),
+                        ),
+                      );
+                      return;
+                    }
+                    final success = await ref
+                        .read(shiftManagementViewModelProvider.notifier)
+                        .createSchedule(
+                          userIds: selectedStaff.toList(),
+                          shiftTemplateId: templateId!,
+                          workDates: [
+                            DateTimeUtils.formatApiDate(selectedDate!),
+                          ],
+                          scheduleType: isOvertime ? 'OVERTIME' : 'NORMAL',
+                        );
+                    if (ctx.mounted && success) Navigator.pop(ctx);
+                  },
+                ),
+              ],
               children: [
                 DropdownButtonFormField<String>(
                   // ignore: deprecated_member_use
@@ -159,46 +199,6 @@ class ShiftManagementView extends ConsumerWidget {
                     },
                   );
                 }),
-              ],
-              actions: [
-                DetailActionButton(
-                  label: 'Lưu phân ca',
-                  icon: Icons.save_outlined,
-                  filled: true,
-                  onPressed: () async {
-                    if (templateId == null || templateId!.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Chọn ca mẫu.')),
-                      );
-                      return;
-                    }
-                    if (selectedDate == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Chọn ngày làm việc.')),
-                      );
-                      return;
-                    }
-                    if (selectedStaff.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Chọn ít nhất một nhân viên.'),
-                        ),
-                      );
-                      return;
-                    }
-                    final success = await ref
-                        .read(shiftManagementViewModelProvider.notifier)
-                        .createSchedule(
-                          userIds: selectedStaff.toList(),
-                          shiftTemplateId: templateId!,
-                          workDates: [
-                            DateTimeUtils.formatApiDate(selectedDate!),
-                          ],
-                          scheduleType: isOvertime ? 'OVERTIME' : 'NORMAL',
-                        );
-                    if (ctx.mounted && success) Navigator.pop(ctx);
-                  },
-                ),
               ],
             );
           },
@@ -338,15 +338,6 @@ class _SchedulesTab extends ConsumerWidget {
         return CenteredDetailCard(
           title: item.shiftName,
           statusLabel: item.statusLabel,
-          children: [
-            Text('Ngày: ${item.workDate}'),
-            Text('Giờ: ${item.timeRange}'),
-            Text(
-              'Loại: ${item.scheduleType == 'OVERTIME' ? 'Tăng ca' : 'Bình thường'}',
-            ),
-            const SizedBox(height: 8),
-            Text('Nhân viên: ${item.staffNames}'),
-          ],
           actions: [
             if (canDelete) ...[
               DetailActionButton(
@@ -390,6 +381,15 @@ class _SchedulesTab extends ConsumerWidget {
                 },
               ),
             ],
+          ],
+          children: [
+            Text('Ngày: ${item.workDate}'),
+            Text('Giờ: ${item.timeRange}'),
+            Text(
+              'Loại: ${item.scheduleType == 'OVERTIME' ? 'Tăng ca' : 'Bình thường'}',
+            ),
+            const SizedBox(height: 8),
+            Text('Nhân viên: ${item.staffNames}'),
           ],
         );
       },
@@ -629,6 +629,29 @@ class _TemplatesTab extends ConsumerWidget {
 
             return CenteredDetailCard(
               title: isEdit ? 'Sửa ca mẫu' : 'Tạo ca mẫu',
+              actions: [
+                DetailActionButton(
+                  label: isEdit ? 'Lưu' : 'Tạo',
+                  icon: Icons.check_rounded,
+                  filled: true,
+                  onPressed: () async {
+                    if (!formKey.currentState!.validate()) return;
+                    final input = CreateShiftTemplateInput(
+                      name: nameCtrl.text,
+                      startTime: fmt(start),
+                      endTime: fmt(end),
+                    );
+                    final ok = isEdit
+                        ? await ref
+                            .read(shiftManagementViewModelProvider.notifier)
+                            .updateTemplate(template.id, input)
+                        : await ref
+                            .read(shiftManagementViewModelProvider.notifier)
+                            .createTemplate(input);
+                    if (ctx.mounted && ok) Navigator.pop(ctx);
+                  },
+                ),
+              ],
               children: [
                 Form(
                   key: formKey,
@@ -665,29 +688,6 @@ class _TemplatesTab extends ConsumerWidget {
                       ),
                     ],
                   ),
-                ),
-              ],
-              actions: [
-                DetailActionButton(
-                  label: isEdit ? 'Lưu' : 'Tạo',
-                  icon: Icons.check_rounded,
-                  filled: true,
-                  onPressed: () async {
-                    if (!formKey.currentState!.validate()) return;
-                    final input = CreateShiftTemplateInput(
-                      name: nameCtrl.text,
-                      startTime: fmt(start),
-                      endTime: fmt(end),
-                    );
-                    final ok = isEdit
-                        ? await ref
-                            .read(shiftManagementViewModelProvider.notifier)
-                            .updateTemplate(template.id, input)
-                        : await ref
-                            .read(shiftManagementViewModelProvider.notifier)
-                            .createTemplate(input);
-                    if (ctx.mounted && ok) Navigator.pop(ctx);
-                  },
                 ),
               ],
             );
