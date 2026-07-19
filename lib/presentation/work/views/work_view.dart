@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/viewmodels/user_profile_provider.dart';
+import '../../dashboard/views/dashboard_view.dart';
+import '../../inventory/views/inventory_dashboard_view.dart';
+import '../../location_settings/views/location_settings_view.dart';
 import '../../schedule/views/schedule_view.dart';
+import '../../stock_movement_history/views/stock_movement_history_view.dart';
 import 'feature_placeholder_view.dart';
 
 class WorkView extends ConsumerWidget {
@@ -101,7 +105,7 @@ class WorkView extends ConsumerWidget {
         WorkItem(
           name: 'Doanh thu',
           icon: Icons.attach_money_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Quản lý doanh thu'),
+          builder: () => const DashboardView(),
         ),
         WorkItem(
           name: 'Duyệt nghỉ',
@@ -116,6 +120,16 @@ class WorkView extends ConsumerWidget {
       icon: Icons.warehouse_outlined,
       items: [
         WorkItem(
+          name: 'Tồn kho',
+          icon: Icons.inventory_2_outlined,
+          builder: () => const InventoryDashboardView(),
+        ),
+        WorkItem(
+          name: 'Lịch sử nhập/xuất kho',
+          icon: Icons.receipt_long_outlined,
+          builder: () => const StockMovementHistoryView(),
+        ),
+        WorkItem(
           name: 'Danh sách sản phẩm',
           icon: Icons.list_alt_rounded,
           builder: () => const FeaturePlaceholderView(title: 'Danh sách sản phẩm'),
@@ -129,6 +143,11 @@ class WorkView extends ConsumerWidget {
           name: 'Xác nhận xuất',
           icon: Icons.output_rounded,
           builder: () => const FeaturePlaceholderView(title: 'Xác nhận xuất kho'),
+        ),
+        WorkItem(
+          name: 'Setting chi nhánh, kho',
+          icon: Icons.settings_outlined,
+          builder: () => const LocationSettingsView(),
         ),
       ],
     );
