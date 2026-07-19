@@ -77,8 +77,9 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
   /// The view reads [state.isCheckingIn] to disable/enable the button.
   Future<String?> checkIn() async {
     final shift = state.shift;
-    if (shift == null || !shift.isCheckInEligible)
+    if (shift == null || !shift.isCheckInEligible) {
       return 'Lỗi: Không đủ điều kiện chấm công';
+    }
 
     state = state.copyWith(isCheckingIn: true, clearError: true);
     try {
