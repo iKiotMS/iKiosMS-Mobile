@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/viewmodels/user_profile_provider.dart';
 import '../../schedule/views/schedule_view.dart';
+import '../../transfers/views/transfers_list_view.dart';
 import 'feature_placeholder_view.dart';
 
 class WorkView extends ConsumerWidget {
@@ -51,21 +52,49 @@ class WorkView extends ConsumerWidget {
                       group.title,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    shape: const Border(), // Removes bottom/top borders when expanded
+                    shape: const Border(),
                     childrenPadding: const EdgeInsets.only(bottom: 8),
                     initiallyExpanded: true,
                     children: group.items.map((item) {
+                      if (item.subItems != null && item.subItems!.isNotEmpty) {
+                        return ExpansionTile(
+                          tilePadding: const EdgeInsets.symmetric(horizontal: 24.0),
+                          leading: Icon(item.icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
+                          title: Text(item.title),
+                          shape: const Border(),
+                          children: item.subItems!.map((subItem) {
+                            return ListTile(
+                              contentPadding: const EdgeInsets.only(left: 48.0, right: 24.0),
+                              title: Text(
+                                subItem.title,
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                              trailing: const Icon(Icons.chevron_right_rounded, size: 18),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => subItem.builder(),
+                                  ),
+                                );
+                              },
+                            );
+                          }).toList(),
+                        );
+                      }
+
                       return ListTile(
                         contentPadding: const EdgeInsets.symmetric(horizontal: 24.0),
                         leading: Icon(item.icon, size: 20, color: theme.colorScheme.onSurfaceVariant),
-                        title: Text(item.name),
+                        title: Text(item.title),
                         trailing: const Icon(Icons.chevron_right_rounded, size: 18),
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => item.builder(),
-                            ),
-                          );
+                          if (item.builder != null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => item.builder!(),
+                              ),
+                            );
+                          }
                         },
                       );
                     }).toList(),
@@ -84,142 +113,332 @@ class WorkView extends ConsumerWidget {
   }
 
   List<WorkGroup> _getGroupsForRole(String role) {
-    final manageGroup = WorkGroup(
-      title: 'Quản lý',
-      icon: Icons.admin_panel_settings_outlined,
-      items: [
-        WorkItem(
-          name: 'Nhân viên',
-          icon: Icons.people_outline_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Quản lý nhân viên'),
+    // --- Reusable Sidebar Items matching sidebar-items.ts ---
+
+    // Quản lý Items
+    final tongQuanItem = WorkItem(
+      title: 'Tổng quan',
+      icon: Icons.dashboard_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Tổng quan'),
+    );
+
+    final soThuChiItem = WorkItem(
+      title: 'Sổ thu chi',
+      icon: Icons.account_balance_wallet_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Sổ thu chi'),
+    );
+
+    final nhanVienItem = WorkItem(
+      title: 'Nhân viên',
+      icon: Icons.people_outline_rounded,
+      subItems: [
+        WorkSubItem(
+          title: 'Danh sách',
+          builder: () => const FeaturePlaceholderView(title: 'Danh sách nhân viên'),
         ),
-        WorkItem(
-          name: 'Ca làm',
-          icon: Icons.access_time_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Quản lý ca làm'),
+        WorkSubItem(
+          title: 'Lịch làm',
+          builder: () => const ScheduleView(),
         ),
-        WorkItem(
-          name: 'Doanh thu',
-          icon: Icons.attach_money_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Quản lý doanh thu'),
+        WorkSubItem(
+          title: 'Nghỉ phép',
+          builder: () => const FeaturePlaceholderView(title: 'Nghỉ phép'),
         ),
-        WorkItem(
-          name: 'Duyệt nghỉ',
-          icon: Icons.event_busy_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Duyệt nghỉ'),
+        WorkSubItem(
+          title: 'Ngày lễ',
+          builder: () => const FeaturePlaceholderView(title: 'Ngày lễ'),
+        ),
+        WorkSubItem(
+          title: 'Bảng lương',
+          builder: () => const FeaturePlaceholderView(title: 'Bảng lương'),
         ),
       ],
     );
 
-    final warehouseGroup = WorkGroup(
-      title: 'Kho',
-      icon: Icons.warehouse_outlined,
-      items: [
-        WorkItem(
-          name: 'Danh sách sản phẩm',
-          icon: Icons.list_alt_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Danh sách sản phẩm'),
+    final luongItem = WorkItem(
+      title: 'Lương của tôi',
+      icon: Icons.payments_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Lương của tôi'),
+    );
+
+    // Quản lý bán hàng Items
+    final hangHoaItem = WorkItem(
+      title: 'Hàng hóa',
+      icon: Icons.inventory_2_outlined,
+      subItems: [
+        WorkSubItem(
+          title: 'Danh sách',
+          builder: () => const FeaturePlaceholderView(title: 'Danh sách hàng hóa'),
         ),
-        WorkItem(
-          name: 'Xác nhận nhập',
-          icon: Icons.input_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Xác nhận nhập kho'),
+        WorkSubItem(
+          title: 'Danh mục',
+          builder: () => const FeaturePlaceholderView(title: 'Danh mục hàng hóa'),
         ),
-        WorkItem(
-          name: 'Xác nhận xuất',
-          icon: Icons.output_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Xác nhận xuất kho'),
+        WorkSubItem(
+          title: 'Thương hiệu',
+          builder: () => const FeaturePlaceholderView(title: 'Thương hiệu'),
         ),
       ],
     );
 
-    final salesGroup = WorkGroup(
-      title: 'Bán hàng',
-      icon: Icons.point_of_sale_rounded,
-      items: [
-        WorkItem(
-          name: 'Tạo đơn',
-          icon: Icons.add_shopping_cart_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Tạo đơn bán hàng'),
+    final giaoDichItem = WorkItem(
+      title: 'Giao dịch',
+      icon: Icons.swap_horiz_rounded,
+      subItems: [
+        WorkSubItem(
+          title: 'Nhà cung cấp',
+          builder: () => const FeaturePlaceholderView(title: 'Nhà cung cấp'),
+        ),
+        WorkSubItem(
+          title: 'Nhập hàng',
+          builder: () => const FeaturePlaceholderView(title: 'Nhập hàng'),
+        ),
+        WorkSubItem(
+          title: 'Chuyển kho',
+          builder: () => const TransfersListView(),
+        ),
+        WorkSubItem(
+          title: 'Điều chỉnh tồn kho',
+          builder: () => const FeaturePlaceholderView(title: 'Điều chỉnh tồn kho'),
         ),
       ],
     );
 
-    final ordersGroup = WorkGroup(
+    final giaoDichBranchItem = WorkItem(
+      title: 'Giao dịch',
+      icon: Icons.swap_horiz_rounded,
+      subItems: [
+        WorkSubItem(
+          title: 'Nhà cung cấp',
+          builder: () => const FeaturePlaceholderView(title: 'Nhà cung cấp'),
+        ),
+        WorkSubItem(
+          title: 'Chuyển hàng',
+          builder: () => const TransfersListView(),
+        ),
+        WorkSubItem(
+          title: 'Điều chỉnh tồn kho',
+          builder: () => const FeaturePlaceholderView(title: 'Điều chỉnh tồn kho'),
+        ),
+      ],
+    );
+
+    final donHangItem = WorkItem(
       title: 'Đơn hàng',
-      icon: Icons.shopping_bag_outlined,
-      items: [
-        WorkItem(
-          name: 'Tạo Order',
-          icon: Icons.add_circle_outline_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Tạo Order'),
-        ),
-        WorkItem(
-          name: 'Hoá đơn',
-          icon: Icons.receipt_rounded,
+      icon: Icons.shopping_cart_outlined,
+      subItems: [
+        WorkSubItem(
+          title: 'Hoá đơn',
           builder: () => const FeaturePlaceholderView(title: 'Hóa đơn'),
         ),
       ],
     );
 
-    final goodsGroup = WorkGroup(
-      title: 'Hàng hóa',
-      icon: Icons.category_outlined,
-      items: [
-        WorkItem(
-          name: 'Danh sách hàng hóa',
-          icon: Icons.list_rounded,
-          builder: () => const FeaturePlaceholderView(title: 'Danh sách hàng hóa'),
+    final ketTienItem = WorkItem(
+      title: 'Két tiền',
+      icon: Icons.savings_outlined,
+      subItems: [
+        WorkSubItem(
+          title: 'Hôm nay',
+          builder: () => const FeaturePlaceholderView(title: 'Két tiền hôm nay'),
+        ),
+        WorkSubItem(
+          title: 'Lịch sử',
+          builder: () => const FeaturePlaceholderView(title: 'Lịch sử két tiền'),
         ),
       ],
     );
 
-    final workGroup = WorkGroup(
-      title: 'Làm việc',
-      icon: Icons.work_outline_rounded,
-      items: [
-        WorkItem(
-          name: 'Check-in',
-          icon: Icons.location_on_outlined,
-          builder: () => const FeaturePlaceholderView(title: 'Check-in chấm công'),
-        ),
-        WorkItem(
-          name: 'Lịch làm',
-          icon: Icons.calendar_month_outlined,
-          builder: () => const ScheduleView(),
-        ),
-      ],
+    // CRM Items
+    final khachHangItem = WorkItem(
+      title: 'Khách hàng',
+      icon: Icons.person_search_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Khách hàng'),
     );
 
-    if (role == 'TENANT_OWNER') {
+    final khuyenMaiItem = WorkItem(
+      title: 'Khuyến mãi',
+      icon: Icons.local_offer_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Khuyến mãi'),
+    );
+
+    // SUPER_ADMIN Items
+    final adminDashboardItem = WorkItem(
+      title: 'Dashboard',
+      icon: Icons.space_dashboard_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Admin Dashboard'),
+    );
+    final adminSystemNotificationsItem = WorkItem(
+      title: 'Thông báo',
+      icon: Icons.notifications_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Thông báo hệ thống'),
+    );
+    final adminUsersItem = WorkItem(
+      title: 'Người dùng',
+      icon: Icons.manage_accounts_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Quản lý người dùng'),
+    );
+    final subscriptionsItem = WorkItem(
+      title: 'Subscription',
+      icon: Icons.card_membership_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Quản lý Subscription'),
+    );
+    final adminSepayItem = WorkItem(
+      title: 'Liên kết SePay',
+      icon: Icons.account_balance_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Liên kết SePay'),
+    );
+    final adminGiaoDichItem = WorkItem(
+      title: 'Giao dịch',
+      icon: Icons.swap_horiz_rounded,
+      builder: () => const FeaturePlaceholderView(title: 'Giao dịch hệ thống'),
+    );
+    final adminAuditLogItem = WorkItem(
+      title: 'Nhật ký hệ thống',
+      icon: Icons.security_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Nhật ký hệ thống'),
+    );
+    final adminNotificationsItem = WorkItem(
+      title: 'Gửi thông báo',
+      icon: Icons.campaign_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Gửi thông báo'),
+    );
+    final adminTicketsItem = WorkItem(
+      title: 'Hỗ trợ kỹ thuật',
+      icon: Icons.support_agent_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Hỗ trợ kỹ thuật'),
+    );
+    final cauHinhHeThongItem = WorkItem(
+      title: 'Cấu hình hệ thống',
+      icon: Icons.settings_outlined,
+      builder: () => const FeaturePlaceholderView(title: 'Cấu hình hệ thống'),
+    );
+
+    // --- Common Group Reusers matching sidebar-role.ts ---
+
+    final crmGroup = WorkGroup(
+      title: 'CRM',
+      icon: Icons.groups_outlined,
+      items: [khachHangItem, khuyenMaiItem],
+    );
+
+    final salaryGroup = WorkGroup(
+      title: 'Lương',
+      icon: Icons.payments_outlined,
+      items: [luongItem],
+    );
+
+    // --- Role-based Config matching sidebarRoleConfig in sidebar-role.ts ---
+
+    if (role == 'SUPER_ADMIN') {
       return [
-        manageGroup,
-        warehouseGroup,
-        salesGroup,
-        ordersGroup,
-        goodsGroup,
-        workGroup,
+        WorkGroup(
+          title: 'Quản lý',
+          icon: Icons.admin_panel_settings_outlined,
+          items: [
+            adminDashboardItem,
+            adminSystemNotificationsItem,
+            adminUsersItem,
+            subscriptionsItem,
+            adminSepayItem,
+            adminGiaoDichItem,
+            adminAuditLogItem,
+            adminNotificationsItem,
+            adminTicketsItem,
+          ],
+        ),
+        WorkGroup(
+          title: 'Cài đặt',
+          icon: Icons.settings_outlined,
+          items: [cauHinhHeThongItem],
+        ),
+      ];
+    } else if (role == 'TENANT_OWNER') {
+      return [
+        WorkGroup(
+          title: 'Quản lý',
+          icon: Icons.admin_panel_settings_outlined,
+          items: [tongQuanItem, soThuChiItem, nhanVienItem],
+        ),
+        WorkGroup(
+          title: 'Quản lý bán hàng',
+          icon: Icons.store_outlined,
+          items: [hangHoaItem, giaoDichItem, donHangItem, ketTienItem],
+        ),
+        crmGroup,
       ];
     } else if (role == 'BRANCH_MANAGER') {
       return [
-        manageGroup,
-        warehouseGroup,
-        salesGroup,
+        WorkGroup(
+          title: 'Quản lý',
+          icon: Icons.admin_panel_settings_outlined,
+          items: [tongQuanItem, soThuChiItem, nhanVienItem],
+        ),
+        WorkGroup(
+          title: 'Quản lý bán hàng',
+          icon: Icons.store_outlined,
+          items: [hangHoaItem, giaoDichBranchItem, donHangItem, ketTienItem],
+        ),
+        crmGroup,
+        salaryGroup,
       ];
     } else if (role == 'WAREHOUSE_MANAGER') {
       return [
-        warehouseGroup,
+        WorkGroup(
+          title: 'Quản lý',
+          icon: Icons.admin_panel_settings_outlined,
+          items: [nhanVienItem],
+        ),
+        WorkGroup(
+          title: 'Quản lý bán hàng',
+          icon: Icons.store_outlined,
+          items: [hangHoaItem, giaoDichItem],
+        ),
+        salaryGroup,
       ];
     } else if (role == 'STAFF') {
       return [
-        ordersGroup,
-        goodsGroup,
-        workGroup,
+        WorkGroup(
+          title: 'Quản lý',
+          icon: Icons.admin_panel_settings_outlined,
+          items: [nhanVienItem],
+        ),
+        WorkGroup(
+          title: 'Quản lý bán hàng',
+          icon: Icons.store_outlined,
+          items: [hangHoaItem, donHangItem, ketTienItem],
+        ),
+        crmGroup,
+        salaryGroup,
       ];
     } else {
-      return [workGroup];
+      return [];
     }
   }
+}
+
+class WorkSubItem {
+  final String title;
+  final Widget Function() builder;
+
+  const WorkSubItem({
+    required this.title,
+    required this.builder,
+  });
+}
+
+class WorkItem {
+  final String title;
+  final IconData icon;
+  final Widget Function()? builder;
+  final List<WorkSubItem>? subItems;
+
+  const WorkItem({
+    required this.title,
+    required this.icon,
+    this.builder,
+    this.subItems,
+  });
 }
 
 class WorkGroup {
@@ -231,17 +450,5 @@ class WorkGroup {
     required this.title,
     required this.icon,
     required this.items,
-  });
-}
-
-class WorkItem {
-  final String name;
-  final IconData icon;
-  final Widget Function() builder;
-
-  const WorkItem({
-    required this.name,
-    required this.icon,
-    required this.builder,
   });
 }
