@@ -460,6 +460,12 @@ class StockMovementProductItemOption {
   final int stock;
   final bool atLocation;
 
+  /// Supplier ids already linked to this product item (`ProductItem.suppliers`).
+  /// Used by the "Nhập hàng" product picker to flag catalog products that
+  /// aren't yet linked to the chosen supplier, mirroring the web app's
+  /// `StockMovementProductItemOption.supplierIds`.
+  final List<String> supplierIds;
+
   const StockMovementProductItemOption({
     required this.id,
     required this.productId,
@@ -469,5 +475,21 @@ class StockMovementProductItemOption {
     this.retailPrice,
     required this.stock,
     this.atLocation = false,
+    this.supplierIds = const [],
   });
+}
+
+/// `{_id, name}` option for the "Nhập hàng" supplier picker.
+class SupplierOption {
+  final String id;
+  final String name;
+
+  const SupplierOption({required this.id, required this.name});
+
+  factory SupplierOption.fromJson(Map<String, dynamic> json) {
+    return SupplierOption(
+      id: json['_id']?.toString() ?? '',
+      name: json['supplierName']?.toString() ?? json['name']?.toString() ?? json['_id']?.toString() ?? '',
+    );
+  }
 }
