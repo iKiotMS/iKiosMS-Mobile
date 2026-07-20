@@ -135,6 +135,15 @@ class ApiEndpoints {
   static const String categories = '/categories';
   static const String productItems = '/products/items';
 
+  // Suppliers + product catalog lookups for "Nhập hàng" (IMPORT stock
+  // movements) — picking a supplier, searching/linking products to it.
+  static const String suppliers = '/suppliers';
+  static const String productsSearch = '/products/search';
+  static const String products = '/products';
+  static String productDetail(String id) => '/products/$id';
+  static String attachProductItemSupplier(String id) =>
+      '/products/items/$id/suppliers';
+
   // Support Tickets
   static const String myTickets = '/tickets/my';
   static const String tickets = '/tickets';

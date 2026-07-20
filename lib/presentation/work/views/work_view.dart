@@ -8,6 +8,7 @@ import '../../auth/viewmodels/user_profile_provider.dart';
 import '../../leave/leave_view.dart';
 import '../../payroll/payroll_view.dart';
 import '../../cashflow/views/cash_flow_view.dart';
+import '../../imports/views/import_list_view.dart';
 import '../../leave_approval/views/leave_approval_view.dart';
 import '../../location_settings/views/location_settings_view.dart';
 import '../../promotion/views/promotion_list_view.dart';
@@ -240,7 +241,7 @@ class WorkView extends ConsumerWidget {
         ),
         WorkSubItem(
           title: 'Nhập hàng',
-          builder: () => const FeaturePlaceholderView(title: 'Nhập hàng'),
+          builder: () => const ImportListView(),
         ),
         WorkSubItem(
           title: 'Chuyển kho',
