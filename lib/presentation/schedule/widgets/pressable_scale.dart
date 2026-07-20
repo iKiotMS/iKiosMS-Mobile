@@ -7,11 +7,7 @@ import 'package:flutter/material.dart';
 ///
 /// Scales to 0.98 on press, returns to 1.0 on release.
 class PressableScale extends StatefulWidget {
-  const PressableScale({
-    super.key,
-    required this.child,
-    this.onTap,
-  });
+  const PressableScale({super.key, required this.child, this.onTap});
 
   final Widget child;
   final VoidCallback? onTap;

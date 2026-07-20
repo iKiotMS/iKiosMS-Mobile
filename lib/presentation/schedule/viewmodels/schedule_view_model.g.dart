@@ -6,7 +6,7 @@ part of 'schedule_view_model.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$scheduleViewModelHash() => r'fdf462830b3a7a16b21c5c70d0064199b307da1c';
+String _$scheduleViewModelHash() => r'e3d5ac64042998ed440fd47f94d1ce79163e44bd';
 
 /// Riverpod-generated notifier for the schedule screen.
 ///

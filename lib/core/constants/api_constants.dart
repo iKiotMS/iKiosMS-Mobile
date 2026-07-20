@@ -23,9 +23,9 @@ class ApiEndpoints {
   static String markNotificationRead(String id) => '/notifications/$id/read';
   static const String markAllNotificationsRead = '/notifications/read-all';
 
-  // GET /working-schedules?userId=123&startDate=yyyy-MM-dd&endDate=yyyy-MM-dd
-  static String shifts(String userId, String startDate, String endDate) {
-    return '/working-schedules?userId=$userId&startDate=$startDate&endDate=$endDate';
+  // GET /working-schedules/me?startDate=yyyy-MM-dd&endDate=yyyy-MM-dd
+  static String myShifts(String startDate, String endDate) {
+    return '/working-schedules/me?startDate=$startDate&endDate=$endDate';
   }
 
   // GET /working-schedules/{shiftId}
@@ -33,6 +33,18 @@ class ApiEndpoints {
 
   // POST /attendances/check-in
   static const String checkIn = '/attendances/check-in';
+  static const String checkOut = '/attendances/check-out';
+  static const String myAttendances = '/attendances/me';
+
+  // Personal leave requests
+  static const String myLeaveRequests = '/leave-requests/me';
+  static const String leaveBalance = '/leave-requests/balance';
+  static const String createLeaveRequest = '/leave-requests';
+  static String cancelLeaveRequest(String id) => '/leave-requests/$id/cancel';
+
+  // Personal payslips
+  static const String myPayslips = '/payroll/my-payslips';
+  static String myPayslipDetail(String id) => '/payroll/my-payslips/$id';
 
   // Sổ thu chi (cashflow) — Owner/Manager only (backend requires reports:read).
   // Query params (fromDate/toDate as yyyy-MM-dd, flowType, paymentMethod, page,
@@ -122,6 +134,15 @@ class ApiEndpoints {
   // Picker option lists for the promotion create/edit form.
   static const String categories = '/categories';
   static const String productItems = '/products/items';
+
+  // Suppliers + product catalog lookups for "Nhập hàng" (IMPORT stock
+  // movements) — picking a supplier, searching/linking products to it.
+  static const String suppliers = '/suppliers';
+  static const String productsSearch = '/products/search';
+  static const String products = '/products';
+  static String productDetail(String id) => '/products/$id';
+  static String attachProductItemSupplier(String id) =>
+      '/products/items/$id/suppliers';
 
   // Support Tickets
   static const String myTickets = '/tickets/my';

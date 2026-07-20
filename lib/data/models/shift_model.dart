@@ -11,7 +11,9 @@ class ShiftModel {
   final String location;
   final String role;
   final String status; // scheduled | upcoming | active | completed | missed
-  final String? attendanceStatus; // NOT_CHECKED_IN, CHECKED_IN, CHECKED_OUT, ABSENT
+  final String?
+  attendanceStatus; // NOT_CHECKED_IN, CHECKED_IN, CHECKED_OUT, ABSENT
+  final String? attendanceId;
   final DateTime? checkedInAt;
   final DateTime? checkedOutAt;
 
@@ -24,6 +26,7 @@ class ShiftModel {
     required this.role,
     required this.status,
     this.attendanceStatus,
+    this.attendanceId,
     this.checkedInAt,
     this.checkedOutAt,
   });
@@ -33,21 +36,29 @@ class ShiftModel {
   /// Maps to the Backend's `WorkingSchedule` Mongoose model.
   factory ShiftModel.fromJson(Map<String, dynamic> json) {
     // Safely extract nested data
-    final shiftTemplate = json['shiftTemplateId'] as Map<String, dynamic>? ?? {};
+    final shiftTemplate =
+        json['shiftTemplateId'] as Map<String, dynamic>? ?? {};
     final user = json['userId'] as Map<String, dynamic>? ?? {};
-    
+
     // Future-proofing: if the backend adds an aggregated 'attendance' field
-    final attendance = json['attendance'] as Map<String, dynamic>?;
+    final attendanceValue = user['attendance'] ?? json['attendance'];
+    final attendance = attendanceValue is Map
+        ? Map<String, dynamic>.from(attendanceValue)
+        : null;
 
     return ShiftModel(
       id: json['_id']?.toString() ?? '',
-      date: DateTime.tryParse(json['workDate']?.toString() ?? '') ?? DateTime.now(),
+      date:
+          DateTime.tryParse(json['workDate']?.toString() ?? '') ??
+          DateTime.now(),
       startTime: shiftTemplate['startTime']?.toString() ?? '',
       endTime: shiftTemplate['endTime']?.toString() ?? '',
-      location: '', // Add location mapping if the backend adds it to WorkingSchedule/Branch later
+      location:
+          '', // Add location mapping if the backend adds it to WorkingSchedule/Branch later
       role: user['role']?.toString() ?? '',
       status: json['status']?.toString() ?? 'SCHEDULED',
       attendanceStatus: attendance?['status']?.toString(),
+      attendanceId: attendance?['_id']?.toString(),
       checkedInAt: attendance?['actualCheckinAt'] != null
           ? DateTime.tryParse(attendance!['actualCheckinAt'].toString())
           : null,
@@ -59,17 +70,11 @@ class ShiftModel {
 
   // ── Business logic helpers ────────────────────────────────────────────────
 
-  /// True when the employee can tap "Chấm công vào ca".
-  ///
-  /// Only SCHEDULED shifts that haven't been checked-in yet are eligible.
-  bool get isCheckInEligible => status == 'SCHEDULED' && 
-                                (attendanceStatus == 'NOT_CHECKED_IN' || attendanceStatus == null) && 
-                                checkedInAt == null;
-
   /// True if the employee has already checked in.
-  bool get isAlreadyCheckedIn => attendanceStatus == 'CHECKED_IN' || 
-                                 attendanceStatus == 'CHECKED_OUT' || 
-                                 checkedInAt != null;
+  bool get isAlreadyCheckedIn =>
+      attendanceStatus == 'CHECKED_IN' ||
+      attendanceStatus == 'CHECKED_OUT' ||
+      checkedInAt != null;
 
   /// Vietnamese label for the shift status.
   ///
@@ -101,8 +106,12 @@ class ShiftModel {
 
   /// Vietnamese label for the attendance status.
   String get attendanceStatusLabel {
-    if (attendanceStatus == 'CHECKED_OUT' || checkedOutAt != null) return 'Đã check-out';
-    if (attendanceStatus == 'CHECKED_IN' || checkedInAt != null) return 'Đã check-in';
+    if (attendanceStatus == 'CHECKED_OUT' || checkedOutAt != null) {
+      return 'Đã check-out';
+    }
+    if (attendanceStatus == 'CHECKED_IN' || checkedInAt != null) {
+      return 'Đã check-in';
+    }
     if (attendanceStatus == 'ABSENT') return 'Vắng mặt';
     if (status == 'CANCELLED' || status == 'DELETED') return 'Không áp dụng';
     return 'Chưa chấm công';
@@ -110,38 +119,14 @@ class ShiftModel {
 
   /// Color used for the attendance status badge.
   Color get attendanceStatusColor {
-    if (attendanceStatus == 'CHECKED_OUT' || checkedOutAt != null) return Colors.indigo;
-    if (attendanceStatus == 'CHECKED_IN' || checkedInAt != null) return Colors.teal;
+    if (attendanceStatus == 'CHECKED_OUT' || checkedOutAt != null) {
+      return Colors.indigo;
+    }
+    if (attendanceStatus == 'CHECKED_IN' || checkedInAt != null) {
+      return Colors.teal;
+    }
     if (attendanceStatus == 'ABSENT') return Colors.red;
     if (status == 'CANCELLED' || status == 'DELETED') return Colors.grey;
     return Colors.orange.shade700;
-  }
-
-  /// Creates a copy of this shift with updated fields.
-  /// Useful for updating state after a check-in.
-  ShiftModel copyWith({
-    String? id,
-    DateTime? date,
-    String? startTime,
-    String? endTime,
-    String? location,
-    String? role,
-    String? status,
-    String? attendanceStatus,
-    DateTime? checkedInAt,
-    DateTime? checkedOutAt,
-  }) {
-    return ShiftModel(
-      id: id ?? this.id,
-      date: date ?? this.date,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      location: location ?? this.location,
-      role: role ?? this.role,
-      status: status ?? this.status,
-      attendanceStatus: attendanceStatus ?? this.attendanceStatus,
-      checkedInAt: checkedInAt ?? this.checkedInAt,
-      checkedOutAt: checkedOutAt ?? this.checkedOutAt,
-    );
   }
 }

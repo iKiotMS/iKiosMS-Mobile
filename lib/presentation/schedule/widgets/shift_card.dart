@@ -9,11 +9,7 @@ import 'shift_status_badge.dart';
 ///
 /// Tapping navigates to the shift detail screen.
 class ShiftCard extends StatelessWidget {
-  const ShiftCard({
-    super.key,
-    required this.shift,
-    required this.onTap,
-  });
+  const ShiftCard({super.key, required this.shift, required this.onTap});
 
   final ShiftModel shift;
   final VoidCallback onTap;
@@ -64,20 +60,18 @@ class ShiftCard extends StatelessWidget {
                             shift.startTime,
                             shift.endTime,
                           ),
-                          style:
-                              Theme.of(context).textTheme.titleSmall?.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w700),
                         ),
                         const Spacer(),
                         Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ShiftStatusBadge(shift: shift, small: true),
-                          const SizedBox(height: 4),
-                          AttendanceStatusBadge(shift: shift, small: true),
-                        ],
-                      ),
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ShiftStatusBadge(shift: shift, small: true),
+                            const SizedBox(height: 4),
+                            AttendanceStatusBadge(shift: shift, small: true),
+                          ],
+                        ),
                       ],
                     ),
                     const SizedBox(height: 6),
@@ -85,8 +79,8 @@ class ShiftCard extends StatelessWidget {
                     Text(
                       shift.role,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                        fontWeight: FontWeight.w500,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -103,10 +97,8 @@ class ShiftCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             shift.location,
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: colorScheme.onSurfaceVariant,
-                                    ),
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: colorScheme.onSurfaceVariant),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -126,9 +118,7 @@ class ShiftCard extends StatelessWidget {
                           const SizedBox(width: 3),
                           Text(
                             'Đã chấm công',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
+                            style: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(color: Colors.green.shade600),
                           ),
                         ],
@@ -161,7 +151,9 @@ class _DateBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final bg = isToday ? colorScheme.primary : colorScheme.surfaceContainerHighest;
+    final bg = isToday
+        ? colorScheme.primary
+        : colorScheme.surfaceContainerHighest;
     final fg = isToday ? colorScheme.onPrimary : colorScheme.onSurface;
     final fgSub = isToday
         ? colorScheme.onPrimary.withValues(alpha: 0.8)
@@ -197,10 +189,7 @@ class _DateBlock extends StatelessWidget {
           ),
           Text(
             'Th.${date.month}',
-            style: TextStyle(
-              fontSize: 10,
-              color: fgSub,
-            ),
+            style: TextStyle(fontSize: 10, color: fgSub),
           ),
         ],
       ),
