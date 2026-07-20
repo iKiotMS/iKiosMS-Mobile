@@ -150,11 +150,6 @@ class ApiEndpoints {
   static String ticketDetail(String id) => '/tickets/$id';
   static String replyTicket(String id) => '/tickets/$id/my-reply';
 
-  // Products
-  static const String products = '/products';
-  static const String productSearch = '/products/search';
-  static String productDetail(String id) => '/products/$id';
-
   // Brands
   static const String brands = '/brands';
   static String brandDetail(String id) => '/brands/$id';

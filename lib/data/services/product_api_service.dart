@@ -39,7 +39,7 @@ class ProductApiService {
     };
 
     final response = await _dio.get(
-      ApiEndpoints.productSearch,
+      ApiEndpoints.productsSearch,
       queryParameters: queryParams,
     );
 
