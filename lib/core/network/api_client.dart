@@ -38,8 +38,14 @@ Dio apiClient(Ref ref) {
         handler.next(options);
       },
       onError: (DioException e, handler) async {
-        // If we get a 401 Unauthorized, try to refresh the token
-        if (e.response?.statusCode == 401) {
+        // If we get a 401 Unauthorized, or 403 Invalid/expired token, try to refresh
+        final isTokenExpired = e.response?.statusCode == 401 ||
+            (e.response?.statusCode == 403 &&
+                e.response?.data != null &&
+                (e.response?.data is Map) &&
+                e.response?.data['message'] == 'Invalid or expired token.');
+
+        if (isTokenExpired) {
           final notifier = ref.read(authTokenProvider.notifier);
           final refreshToken = await notifier.getRefreshToken();
 

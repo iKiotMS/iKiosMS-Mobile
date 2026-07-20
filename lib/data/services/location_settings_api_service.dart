@@ -68,10 +68,7 @@ class LocationSettingsApiService {
     return _unwrap(
       await _dio.patch(
         ApiEndpoints.warehouseDetail(id),
-        data: {
-          'name': name,
-          'address': ?address,
-        },
+        data: {'name': name, 'address': ?address},
       ),
     );
   }

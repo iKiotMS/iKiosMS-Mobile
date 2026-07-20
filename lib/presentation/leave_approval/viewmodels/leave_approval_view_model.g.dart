@@ -7,7 +7,7 @@ part of 'leave_approval_view_model.dart';
 // **************************************************************************
 
 String _$leaveApprovalViewModelHash() =>
-    r'fbf2e3c0f89dafb54a8c856556961c33434fd3f2';
+    r'76dcaf545d392de13a13328e0751e81f9d325913';
 
 /// See also [LeaveApprovalViewModel].
 @ProviderFor(LeaveApprovalViewModel)

@@ -7,7 +7,7 @@ part of 'shift_management_view_model.dart';
 // **************************************************************************
 
 String _$shiftManagementViewModelHash() =>
-    r'83d02caa91d483ec491f64856e97b057aa036993';
+    r'277bab70ca7f0a1b009c94d7797c254ee91b3c76';
 
 /// See also [ShiftManagementViewModel].
 @ProviderFor(ShiftManagementViewModel)

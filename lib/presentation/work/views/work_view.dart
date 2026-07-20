@@ -13,6 +13,11 @@ import '../../shift_management/views/shift_management_view.dart';
 import '../../staff/views/staff_list_view.dart';
 import '../../stock_adjustment/views/adjustment_list_view.dart';
 import '../../transfers/views/transfers_list_view.dart';
+import '../../product/views/product_list_view.dart';
+import '../../product/views/category_list_view.dart';
+import '../../product/views/brand_list_view.dart';
+import '../../checkout/views/checkout_view.dart';
+import '../../order/views/order_list_view.dart';
 import 'feature_placeholder_view.dart';
 
 class WorkView extends ConsumerWidget {
@@ -212,15 +217,15 @@ class WorkView extends ConsumerWidget {
       subItems: [
         WorkSubItem(
           title: 'Danh sách',
-          builder: () => const FeaturePlaceholderView(title: 'Danh sách hàng hóa'),
+          builder: () => const ProductListView(),
         ),
         WorkSubItem(
           title: 'Danh mục',
-          builder: () => const FeaturePlaceholderView(title: 'Danh mục hàng hóa'),
+          builder: () => const CategoryListView(),
         ),
         WorkSubItem(
           title: 'Thương hiệu',
-          builder: () => const FeaturePlaceholderView(title: 'Thương hiệu'),
+          builder: () => const BrandListView(),
         ),
         WorkSubItem(
           title: 'Điều chỉnh chi nhánh, kho',
@@ -276,8 +281,12 @@ class WorkView extends ConsumerWidget {
       icon: Icons.shopping_cart_outlined,
       subItems: [
         WorkSubItem(
+          title: 'Bán hàng',
+          builder: () => const CheckoutView(),
+        ),
+        WorkSubItem(
           title: 'Hoá đơn',
-          builder: () => const FeaturePlaceholderView(title: 'Hóa đơn'),
+          builder: () => const OrderListView(),
         ),
       ],
     );

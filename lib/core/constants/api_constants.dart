@@ -128,4 +128,21 @@ class ApiEndpoints {
   static const String tickets = '/tickets';
   static String ticketDetail(String id) => '/tickets/$id';
   static String replyTicket(String id) => '/tickets/$id/my-reply';
+
+  // Products
+  static const String products = '/products';
+  static const String productSearch = '/products/search';
+  static String productDetail(String id) => '/products/$id';
+
+  // Brands
+  static const String brands = '/brands';
+  static String brandDetail(String id) => '/brands/$id';
+
+  // Categories
+  static String categoryDetail(String id) => '/categories/$id';
+
+  // Checkout / Orders
+  static const String orders = '/orders';
+  static const String customers = '/customers';
+  static const String customersSearch = '/customers/search';
 }

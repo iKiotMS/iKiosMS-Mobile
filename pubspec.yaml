@@ -47,6 +47,7 @@ dependencies:
   # Show FCM messages as a notification while the app is in the foreground
   # (FCM only auto-displays them in the background/terminated).
   flutter_local_notifications: ^18.0.1
+  barcode_widget: ^2.0.4
 
 dev_dependencies:
   flutter_test:

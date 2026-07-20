@@ -1,32 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'api_client.dart';
+part of 'brand_api_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$apiClientHash() => r'e8022808b97227f4fc4edd0f24294e68a2c9f2ed';
+String _$brandApiServiceHash() => r'7f6b573b0f20a77ad4ef8e0f9c232a3e27e8b138';
 
-/// Riverpod-generated provider that returns a configured [Dio] instance.
-///
-/// All HTTP calls in the app go through this single Dio client.
-/// To add authentication, update the interceptor below.
-///
-/// Copied from [apiClient].
-@ProviderFor(apiClient)
-final apiClientProvider = AutoDisposeProvider<Dio>.internal(
-  apiClient,
-  name: r'apiClientProvider',
+/// See also [brandApiService].
+@ProviderFor(brandApiService)
+final brandApiServiceProvider = AutoDisposeProvider<BrandApiService>.internal(
+  brandApiService,
+  name: r'brandApiServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$apiClientHash,
+      : _$brandApiServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef ApiClientRef = AutoDisposeProviderRef<Dio>;
+typedef BrandApiServiceRef = AutoDisposeProviderRef<BrandApiService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

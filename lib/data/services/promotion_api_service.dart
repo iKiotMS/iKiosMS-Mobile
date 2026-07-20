@@ -42,8 +42,10 @@ class PromotionApiService {
     final data = response.data;
     if (data is Map) {
       return {
-        'data': (data['data'] as List? ?? const []).cast<Map<String, dynamic>>(),
-        'pagination': (data['pagination'] as Map?)?.cast<String, dynamic>() ?? const {},
+        'data': (data['data'] as List? ?? const [])
+            .cast<Map<String, dynamic>>(),
+        'pagination':
+            (data['pagination'] as Map?)?.cast<String, dynamic>() ?? const {},
       };
     }
     return {'data': const <Map<String, dynamic>>[], 'pagination': const {}};
@@ -70,8 +72,10 @@ class PromotionApiService {
     final data = response.data;
     if (data is Map) {
       return {
-        'data': (data['data'] as List? ?? const []).cast<Map<String, dynamic>>(),
-        'pagination': (data['pagination'] as Map?)?.cast<String, dynamic>() ?? const {},
+        'data': (data['data'] as List? ?? const [])
+            .cast<Map<String, dynamic>>(),
+        'pagination':
+            (data['pagination'] as Map?)?.cast<String, dynamic>() ?? const {},
       };
     }
     return {'data': const <Map<String, dynamic>>[], 'pagination': const {}};
@@ -86,11 +90,21 @@ class PromotionApiService {
   }
 
   Future<Map<String, dynamic>> create(PromotionFormPayload payload) async {
-    return _unwrap(await _dio.post(ApiEndpoints.promotions, data: payload.toJson()));
+    return _unwrap(
+      await _dio.post(ApiEndpoints.promotions, data: payload.toJson()),
+    );
   }
 
-  Future<Map<String, dynamic>> update(String id, PromotionFormPayload payload) async {
-    return _unwrap(await _dio.patch(ApiEndpoints.promotionDetail(id), data: payload.toJson()));
+  Future<Map<String, dynamic>> update(
+    String id,
+    PromotionFormPayload payload,
+  ) async {
+    return _unwrap(
+      await _dio.patch(
+        ApiEndpoints.promotionDetail(id),
+        data: payload.toJson(),
+      ),
+    );
   }
 
   Future<Map<String, dynamic>> remove(String id) async {

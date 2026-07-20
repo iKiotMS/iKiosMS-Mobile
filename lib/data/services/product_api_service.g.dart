@@ -1,27 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'staff_list_view_model.dart';
+part of 'product_api_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$staffListViewModelHash() =>
-    r'238b5c69f94ad5fa7147e9751f7b9f5bdad5bf8d';
+String _$productApiServiceHash() => r'd2fffd4039fa91384aaf4d28d899fc10c3d17ec0';
 
-/// See also [StaffListViewModel].
-@ProviderFor(StaffListViewModel)
-final staffListViewModelProvider =
-    AutoDisposeNotifierProvider<StaffListViewModel, StaffListState>.internal(
-      StaffListViewModel.new,
-      name: r'staffListViewModelProvider',
+/// See also [productApiService].
+@ProviderFor(productApiService)
+final productApiServiceProvider =
+    AutoDisposeProvider<ProductApiService>.internal(
+      productApiService,
+      name: r'productApiServiceProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$staffListViewModelHash,
+          : _$productApiServiceHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$StaffListViewModel = AutoDisposeNotifier<StaffListState>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef ProductApiServiceRef = AutoDisposeProviderRef<ProductApiService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
