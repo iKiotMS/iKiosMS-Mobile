@@ -79,7 +79,62 @@ class ShiftDetailView extends ConsumerWidget {
 
           // Shift info card
           _InfoCard(shift: shift, detailState: detailState),
+          if (shift.status == 'SCHEDULED' &&
+              shift.attendanceStatus != 'CHECKED_OUT') ...[
+            const SizedBox(height: 16),
+            FilledButton.icon(
+              onPressed: detailState.isSubmittingAttendance
+                  ? null
+                  : () => _submitAttendance(context, ref, detailState),
+              icon: detailState.isSubmittingAttendance
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(
+                      shift.attendanceStatus == 'CHECKED_IN'
+                          ? Icons.logout_rounded
+                          : Icons.login_rounded,
+                    ),
+              label: Text(
+                detailState.isSubmittingAttendance
+                    ? 'Đang xử lý...'
+                    : shift.attendanceStatus == 'CHECKED_IN'
+                    ? 'Check-out ca này'
+                    : 'Check-in ca này',
+              ),
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(52),
+                backgroundColor: shift.attendanceStatus == 'CHECKED_IN'
+                    ? Colors.orange.shade700
+                    : Colors.green.shade700,
+              ),
+            ),
+          ],
         ],
+      ),
+    );
+  }
+
+  Future<void> _submitAttendance(
+    BuildContext context,
+    WidgetRef ref,
+    ShiftDetailState detailState,
+  ) async {
+    final isCheckingOut = detailState.shift?.attendanceStatus == 'CHECKED_IN';
+    final error = await ref
+        .read(shiftDetailViewModelProvider(shiftId).notifier)
+        .submitAttendance();
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          error ??
+              (isCheckingOut ? 'Check-out thành công' : 'Check-in thành công'),
+        ),
+        backgroundColor: error == null ? Colors.green : Colors.red,
       ),
     );
   }

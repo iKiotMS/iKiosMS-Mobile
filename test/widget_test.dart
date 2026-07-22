@@ -39,6 +39,25 @@ void main() {
     expect(shift.isAlreadyCheckedIn, isTrue);
   });
 
+  test('Shift detail parses userId returned as a list', () {
+    final shift = ShiftModel.fromJson({
+      '_id': 'schedule-1',
+      'workDate': '2026-07-20T00:00:00.000Z',
+      'status': 'SCHEDULED',
+      'shiftTemplateId': {'startTime': '08:00', 'endTime': '17:00'},
+      'userId': [
+        {
+          'role': 'STAFF',
+          'attendance': {'_id': 'attendance-1', 'status': 'CHECKED_IN'},
+        },
+      ],
+    });
+
+    expect(shift.role, 'STAFF');
+    expect(shift.attendanceId, 'attendance-1');
+    expect(shift.attendanceStatus, 'CHECKED_IN');
+  });
+
   test('Payslip parses nested payroll period', () {
     final payslip = PayslipModel.fromJson({
       '_id': 'payslip-1',
