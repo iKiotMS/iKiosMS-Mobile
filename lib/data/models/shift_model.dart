@@ -38,7 +38,14 @@ class ShiftModel {
     // Safely extract nested data
     final shiftTemplate =
         json['shiftTemplateId'] as Map<String, dynamic>? ?? {};
-    final user = json['userId'] as Map<String, dynamic>? ?? {};
+    final rawUser = json['userId'];
+    // API danh sách trả một nhân viên, còn API chi tiết có thể trả mảng.
+    // Màn hình của staff chỉ cần dữ liệu của người đang xem ca.
+    final user = rawUser is List && rawUser.isNotEmpty && rawUser.first is Map
+        ? Map<String, dynamic>.from(rawUser.first as Map)
+        : rawUser is Map
+        ? Map<String, dynamic>.from(rawUser)
+        : <String, dynamic>{};
 
     // Future-proofing: if the backend adds an aggregated 'attendance' field
     final attendanceValue = user['attendance'] ?? json['attendance'];

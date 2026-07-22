@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../attendance/attendance_view.dart';
 import '../../auth/viewmodels/user_profile_provider.dart';
 import '../../leave/leave_view.dart';
 import '../../payroll/payroll_view.dart';
@@ -207,7 +206,7 @@ class WorkView extends ConsumerWidget {
     final chamCongItem = WorkItem(
       title: 'Chấm công',
       icon: Icons.fingerprint_rounded,
-      builder: () => const AttendanceView(),
+      builder: () => const ScheduleView(),
     );
 
     // Quản lý bán hàng Items

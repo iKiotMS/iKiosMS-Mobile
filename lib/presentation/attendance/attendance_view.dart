@@ -40,36 +40,32 @@ class AttendanceView extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
             ],
+            if (attendance == null && !state.loading) ...[
+              const SizedBox(height: 20),
+              const Text(
+                'Hãy mở danh sách lịch làm, chọn một ca và check-in trong màn chi tiết.',
+                textAlign: TextAlign.center,
+              ),
+            ],
             const SizedBox(height: 36),
-            FilledButton.icon(
-              onPressed: state.loading || state.submitting
-                  ? null
-                  : () => _submit(context, ref, attendance == null),
-              icon: state.submitting
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Icon(
-                      attendance == null
-                          ? Icons.login_rounded
-                          : Icons.logout_rounded,
-                    ),
-              label: Text(
-                state.submitting
-                    ? 'Đang xử lý...'
-                    : attendance == null
-                    ? 'Check-in'
-                    : 'Check-out',
+            if (attendance != null)
+              FilledButton.icon(
+                onPressed: state.loading || state.submitting
+                    ? null
+                    : () => _submit(context, ref),
+                icon: state.submitting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.logout_rounded),
+                label: Text(state.submitting ? 'Đang xử lý...' : 'Check-out'),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(54),
+                  backgroundColor: Colors.orange.shade700,
+                ),
               ),
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(54),
-                backgroundColor: attendance == null
-                    ? Colors.green
-                    : Colors.orange.shade700,
-              ),
-            ),
             if (state.loading) ...[
               const SizedBox(height: 20),
               const Center(child: CircularProgressIndicator()),
@@ -84,7 +80,7 @@ class AttendanceView extends ConsumerWidget {
             ],
             const SizedBox(height: 16),
             const Text(
-              'Ứng dụng sẽ gửi thời gian hiện tại và vị trí GPS. Máy chủ tự tìm ca làm phù hợp.',
+              'Check-in được thực hiện từ màn chi tiết của từng ca làm việc.',
               textAlign: TextAlign.center,
             ),
           ],
@@ -93,18 +89,12 @@ class AttendanceView extends ConsumerWidget {
     );
   }
 
-  Future<void> _submit(
-    BuildContext context,
-    WidgetRef ref,
-    bool isCheckIn,
-  ) async {
+  Future<void> _submit(BuildContext context, WidgetRef ref) async {
     final error = await ref.read(attendanceProvider.notifier).submit();
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          error ?? (isCheckIn ? 'Check-in thành công' : 'Check-out thành công'),
-        ),
+        content: Text(error ?? 'Check-out thành công'),
         backgroundColor: error == null ? Colors.green : Colors.red,
       ),
     );

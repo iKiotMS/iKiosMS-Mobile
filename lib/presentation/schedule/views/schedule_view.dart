@@ -140,7 +140,7 @@ class ScheduleView extends ConsumerWidget {
                     final shift = state.shifts[index];
                     return ShiftCard(
                       shift: shift,
-                      onTap: () => _openDetail(context, shift),
+                      onTap: () => _openDetail(context, ref, shift),
                     );
                   }, childCount: state.shifts.length),
                 ),
@@ -154,10 +154,16 @@ class ScheduleView extends ConsumerWidget {
     );
   }
 
-  void _openDetail(BuildContext context, ShiftModel shift) {
-    Navigator.of(context).push(
+  Future<void> _openDetail(
+    BuildContext context,
+    WidgetRef ref,
+    ShiftModel shift,
+  ) async {
+    await Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => ShiftDetailView(shiftId: shift.id)),
     );
+    if (!context.mounted) return;
+    await ref.read(scheduleViewModelProvider.notifier).loadShifts();
   }
 }
 

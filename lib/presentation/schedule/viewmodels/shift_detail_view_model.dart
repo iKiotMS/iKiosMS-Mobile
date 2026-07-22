@@ -1,6 +1,8 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/network/api_exception.dart';
+import '../../../data/attendance_data.dart';
 import '../../../data/models/shift_model.dart';
 import '../../../data/repositories/shift/shift_repository.dart';
 import '../../../data/repositories/shift/shift_repository_provider.dart';
@@ -13,6 +15,7 @@ part 'shift_detail_view_model.g.dart';
 class ShiftDetailState {
   final ShiftModel? shift;
   final bool isLoading;
+  final bool isSubmittingAttendance;
   final String? errorMessage;
   final double? currentLatitude;
   final double? currentLongitude;
@@ -20,6 +23,7 @@ class ShiftDetailState {
   const ShiftDetailState({
     this.shift,
     this.isLoading = false,
+    this.isSubmittingAttendance = false,
     this.errorMessage,
     this.currentLatitude,
     this.currentLongitude,
@@ -28,6 +32,7 @@ class ShiftDetailState {
   ShiftDetailState copyWith({
     ShiftModel? shift,
     bool? isLoading,
+    bool? isSubmittingAttendance,
     String? errorMessage,
     double? currentLatitude,
     double? currentLongitude,
@@ -36,6 +41,8 @@ class ShiftDetailState {
     return ShiftDetailState(
       shift: shift ?? this.shift,
       isLoading: isLoading ?? this.isLoading,
+      isSubmittingAttendance:
+          isSubmittingAttendance ?? this.isSubmittingAttendance,
       currentLatitude: currentLatitude ?? this.currentLatitude,
       currentLongitude: currentLongitude ?? this.currentLongitude,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
@@ -59,10 +66,37 @@ class ShiftDetailViewModel extends _$ShiftDetailViewModel {
   }
 
   ShiftRepository get _repository => ref.read(shiftRepositoryProvider);
+  AttendanceApi get _attendanceApi => ref.read(attendanceApiProvider);
 
   /// Reloads shift data from the backend.
   Future<void> loadShift(String shiftId) async {
     await _loadShift(shiftId);
+  }
+
+  Future<String?> submitAttendance() async {
+    final shift = state.shift;
+    if (shift == null) return 'Không tìm thấy ca làm việc.';
+
+    state = state.copyWith(isSubmittingAttendance: true, clearError: true);
+    try {
+      final isCheckingOut = shift.attendanceStatus == 'CHECKED_IN';
+      if (isCheckingOut) {
+        final attendanceId = shift.attendanceId;
+        if (attendanceId == null || attendanceId.isEmpty) {
+          throw Exception('Không tìm thấy bản ghi check-in của ca này.');
+        }
+        await _attendanceApi.checkOut(attendanceId);
+      } else {
+        await _attendanceApi.checkIn(shift.id);
+      }
+
+      await _loadShift(shift.id);
+      state = state.copyWith(isSubmittingAttendance: false);
+      return null;
+    } catch (error) {
+      state = state.copyWith(isSubmittingAttendance: false);
+      return readableApiError(error);
+    }
   }
 
   Future<void> _loadShift(String shiftId) async {

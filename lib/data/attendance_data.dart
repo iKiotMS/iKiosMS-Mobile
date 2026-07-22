@@ -49,12 +49,12 @@ class AttendanceApi {
     );
   }
 
-  Future<void> checkIn() async {
+  Future<void> checkIn(String scheduleId) async {
     final position = await _getPosition();
     await dio.post(
       ApiEndpoints.checkIn,
       data: {
-        // Backend tự tìm ca NORMAL hiện tại, Mobile không truyền scheduleId.
+        'scheduleId': scheduleId,
         'actualCheckinAt': DateTime.now().toUtc().toIso8601String(),
         'latitude': position.latitude,
         'longitude': position.longitude,
@@ -137,14 +137,17 @@ class AttendanceNotifier extends StateNotifier<AttendanceState> {
     }
   }
 
-  Future<String?> submit() async {
+  Future<String?> submit({String? scheduleId}) async {
     state = AttendanceState(
       submitting: true,
       openAttendance: state.openAttendance,
     );
     try {
       if (state.openAttendance == null) {
-        await api.checkIn();
+        if (scheduleId == null) {
+          throw Exception('Thiếu thông tin ca làm việc.');
+        }
+        await api.checkIn(scheduleId);
       } else {
         await api.checkOut(state.openAttendance!.id);
       }
