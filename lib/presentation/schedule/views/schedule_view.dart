@@ -141,6 +141,10 @@ class ScheduleView extends ConsumerWidget {
                     return ShiftCard(
                       shift: shift,
                       onTap: () => _openDetail(context, ref, shift),
+                      onAttendanceTap: () =>
+                          _handleAttendance(context, ref, shift),
+                      isSubmittingAttendance:
+                          state.submittingShiftId == shift.id,
                     );
                   }, childCount: state.shifts.length),
                 ),
@@ -164,6 +168,28 @@ class ScheduleView extends ConsumerWidget {
     );
     if (!context.mounted) return;
     await ref.read(scheduleViewModelProvider.notifier).loadShifts();
+  }
+
+  Future<void> _handleAttendance(
+    BuildContext context,
+    WidgetRef ref,
+    ShiftModel shift,
+  ) async {
+    final isCheckingOut = shift.attendanceStatus == 'CHECKED_IN';
+    final error = await ref
+        .read(scheduleViewModelProvider.notifier)
+        .submitAttendance(shift);
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          error ??
+              (isCheckingOut ? 'Check-out thành công' : 'Check-in thành công'),
+        ),
+        backgroundColor: error == null ? Colors.green : Colors.red,
+      ),
+    );
   }
 }
 

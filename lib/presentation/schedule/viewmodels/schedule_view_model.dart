@@ -1,6 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/network/api_exception.dart';
 import '../../../core/utils/date_time_utils.dart';
+import '../../../data/attendance_data.dart';
 import '../../../data/models/shift_model.dart';
 import '../../../data/repositories/shift/shift_repository.dart';
 import '../../../data/repositories/shift/shift_repository_provider.dart';
@@ -16,6 +18,7 @@ class ScheduleState {
   final String? errorMessage;
   final DateTime selectedWeekStart; // always a Monday
   final DateTime selectedWeekEnd; // always the following Sunday
+  final String? submittingShiftId;
 
   const ScheduleState({
     this.shifts = const [],
@@ -23,6 +26,7 @@ class ScheduleState {
     this.errorMessage,
     required this.selectedWeekStart,
     required this.selectedWeekEnd,
+    this.submittingShiftId,
   });
 
   /// The currently active shift (status == 'active'), or null.
@@ -54,6 +58,8 @@ class ScheduleState {
     bool clearError = false,
     DateTime? selectedWeekStart,
     DateTime? selectedWeekEnd,
+    String? submittingShiftId,
+    bool clearSubmitting = false,
   }) {
     return ScheduleState(
       shifts: shifts ?? this.shifts,
@@ -61,6 +67,8 @@ class ScheduleState {
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       selectedWeekStart: selectedWeekStart ?? this.selectedWeekStart,
       selectedWeekEnd: selectedWeekEnd ?? this.selectedWeekEnd,
+      submittingShiftId:
+          clearSubmitting ? null : (submittingShiftId ?? this.submittingShiftId),
     );
   }
 }
@@ -93,10 +101,35 @@ class ScheduleViewModel extends _$ScheduleViewModel {
   }
 
   ShiftRepository get _repository => ref.read(shiftRepositoryProvider);
+  AttendanceApi get _attendanceApi => ref.read(attendanceApiProvider);
 
   /// Called by the view to load (or reload) shifts for the current week.
   Future<void> loadShifts() async {
     await _loadShifts(state.selectedWeekStart, state.selectedWeekEnd);
+  }
+
+  /// Submit check-in or check-out for a specific shift directly from Schedule view.
+  Future<String?> submitAttendance(ShiftModel shift) async {
+    state = state.copyWith(submittingShiftId: shift.id);
+    try {
+      final isCheckingOut = shift.attendanceStatus == 'CHECKED_IN';
+      if (isCheckingOut) {
+        final attendanceId = shift.attendanceId;
+        if (attendanceId == null || attendanceId.isEmpty) {
+          throw Exception('Không tìm thấy bản ghi check-in của ca này.');
+        }
+        await _attendanceApi.checkOut(attendanceId);
+      } else {
+        await _attendanceApi.checkIn(shift.id);
+      }
+
+      await loadShifts();
+      state = state.copyWith(clearSubmitting: true);
+      return null;
+    } catch (error) {
+      state = state.copyWith(clearSubmitting: true);
+      return readableApiError(error);
+    }
   }
 
   /// Called when the user picks a date in the date picker.
