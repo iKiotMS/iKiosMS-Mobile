@@ -203,11 +203,7 @@ class WorkView extends ConsumerWidget {
       builder: () => const PayrollView(),
     );
 
-    final chamCongItem = WorkItem(
-      title: 'Chấm công',
-      icon: Icons.fingerprint_rounded,
-      builder: () => const ScheduleView(),
-    );
+
 
     // Quản lý bán hàng Items
     final hangHoaItem = WorkItem(
@@ -387,11 +383,6 @@ class WorkView extends ConsumerWidget {
       items: [luongItem],
     );
 
-    final attendanceGroup = WorkGroup(
-      title: 'Chấm công',
-      icon: Icons.fingerprint_rounded,
-      items: [chamCongItem],
-    );
 
     final staffEmployeeGroup = WorkGroup(
       title: 'Nhân viên',
@@ -451,7 +442,7 @@ class WorkView extends ConsumerWidget {
       ];
     } else if (role == 'BRANCH_MANAGER') {
       return [
-        attendanceGroup,
+        
         WorkGroup(
           title: 'Quản lý',
           icon: Icons.admin_panel_settings_outlined,
@@ -467,7 +458,7 @@ class WorkView extends ConsumerWidget {
       ];
     } else if (role == 'WAREHOUSE_MANAGER') {
       return [
-        attendanceGroup,
+        
         WorkGroup(
           title: 'Quản lý',
           icon: Icons.admin_panel_settings_outlined,
@@ -482,7 +473,7 @@ class WorkView extends ConsumerWidget {
       ];
     } else if (role == 'STAFF') {
       return [
-        attendanceGroup,
+        
         staffEmployeeGroup,
         WorkGroup(
           title: 'Quản lý bán hàng',

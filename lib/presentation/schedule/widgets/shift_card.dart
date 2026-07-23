@@ -9,15 +9,27 @@ import 'shift_status_badge.dart';
 ///
 /// Tapping navigates to the shift detail screen.
 class ShiftCard extends StatelessWidget {
-  const ShiftCard({super.key, required this.shift, required this.onTap});
+  const ShiftCard({
+    super.key,
+    required this.shift,
+    required this.onTap,
+    this.onAttendanceTap,
+    this.isSubmittingAttendance = false,
+  });
 
   final ShiftModel shift;
   final VoidCallback onTap;
+  final VoidCallback? onAttendanceTap;
+  final bool isSubmittingAttendance;
 
   @override
   Widget build(BuildContext context) {
     final isToday = DateTimeUtils.isSameDay(shift.date, DateTime.now());
     final colorScheme = Theme.of(context).colorScheme;
+    final canSubmitAttendance =
+        onAttendanceTap != null &&
+        shift.status == 'SCHEDULED' &&
+        shift.attendanceStatus != 'CHECKED_OUT';
 
     return PressableScale(
       onTap: onTap,
@@ -35,104 +47,154 @@ class ShiftCard extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(14),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
             children: [
-              // Left: date block
-              _DateBlock(date: shift.date, isToday: isToday),
-              const SizedBox(width: 14),
-              // Right: shift details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Time + status badge row
-                    Row(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Left: date block
+                  _DateBlock(date: shift.date, isToday: isToday),
+                  const SizedBox(width: 14),
+                  // Right: shift details
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.access_time_rounded,
-                          size: 14,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          DateTimeUtils.formatTimeRange(
-                            shift.startTime,
-                            shift.endTime,
-                          ),
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                        // Time + status badge row
+                        Row(
                           children: [
-                            ShiftStatusBadge(shift: shift, small: true),
-                            const SizedBox(height: 4),
-                            AttendanceStatusBadge(shift: shift, small: true),
+                            Icon(
+                              Icons.access_time_rounded,
+                              size: 14,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              DateTimeUtils.formatTimeRange(
+                                shift.startTime,
+                                shift.endTime,
+                              ),
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            const Spacer(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                ShiftStatusBadge(shift: shift, small: true),
+                                const SizedBox(height: 4),
+                                AttendanceStatusBadge(
+                                  shift: shift,
+                                  small: true,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    // Role
-                    Text(
-                      shift.role,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 3),
-                    // Location
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 13,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 3),
-                        Expanded(
-                          child: Text(
-                            shift.location,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: colorScheme.onSurfaceVariant),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        const SizedBox(height: 6),
+                        // Role
+                        Text(
+                          shift.role,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w500,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
-                    // Checked-in indicator
-                    if (shift.isAlreadyCheckedIn) ...[
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle_outline,
-                            size: 13,
-                            color: Colors.green.shade600,
-                          ),
-                          const SizedBox(width: 3),
-                          Text(
-                            'Đã chấm công',
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(color: Colors.green.shade600),
+                        const SizedBox(height: 3),
+                        // Location
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              size: 13,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 3),
+                            Expanded(
+                              child: Text(
+                                shift.location,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: colorScheme.onSurfaceVariant,
+                                    ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        // Checked-in indicator
+                        if (shift.isAlreadyCheckedIn) ...[
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.check_circle_outline,
+                                size: 13,
+                                color: Colors.green.shade600,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                'Đã chấm công',
+                                style: Theme.of(context).textTheme.labelSmall
+                                    ?.copyWith(color: Colors.green.shade600),
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                    ],
-                  ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
+                ],
+              ),
+              if (canSubmitAttendance) ...[
+                const SizedBox(height: 10),
+                const Divider(height: 1),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: isSubmittingAttendance ? null : onAttendanceTap,
+                    icon: isSubmittingAttendance
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Icon(
+                            shift.attendanceStatus == 'CHECKED_IN'
+                                ? Icons.logout_rounded
+                                : Icons.login_rounded,
+                            size: 18,
+                          ),
+                    label: Text(
+                      isSubmittingAttendance
+                          ? 'Đang xử lý...'
+                          : shift.attendanceStatus == 'CHECKED_IN'
+                          ? 'Check-out ca này'
+                          : 'Check-in ca này',
+                    ),
+                    style: FilledButton.styleFrom(
+                      visualDensity: VisualDensity.compact,
+                      backgroundColor: shift.attendanceStatus == 'CHECKED_IN'
+                          ? Colors.orange.shade700
+                          : Colors.green.shade700,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 4),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: colorScheme.onSurfaceVariant,
-                size: 20,
-              ),
+              ],
             ],
           ),
         ),
